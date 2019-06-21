@@ -11,7 +11,7 @@
         <q-card-section>
           <div class="q-pa-md">
             <div class="row">
-              <div class="col">
+              <div class="col-xs-12 col-sm-4 col-md-6">
                 <div class="q-pa-xs" style="max-width: 400px">
                   <q-form
                     @submit="onSubmit"
@@ -31,8 +31,8 @@
                         </q-icon>
                       </template>
                     </q-input>
-                    <div>
-                      <q-btn-dropdown :label="doctorName" no-caps>
+                    <div class="col-12">
+                      <q-btn-dropdown class="btnfullwidth" :label="doctorName" no-caps>
                         <q-list v-for="doctor in doctors" :key="doctor.doctorId">
                           <q-item clickable v-close-popup @click="selectDoctor(doctor)">
                             <q-item-section>
@@ -43,8 +43,8 @@
                       </q-btn-dropdown>
                       <div class="customErr" v-if="doctorErr">Please select Doctor</div>
                     </div>
-                    <div>
-                      <q-btn-dropdown :label="facilityName" no-caps>
+                    <div class="col-12">
+                      <q-btn-dropdown class="btnfullwidth" :label="facilityName" no-caps>
                         <q-list v-for="facility in facilities" :key="facility.facilityId">
                           <q-item clickable v-close-popup @click="selectFacility(facility)">
                             <q-item-section>
@@ -55,8 +55,8 @@
                       </q-btn-dropdown>
                       <div class="customErr" v-if="facilityErr">Please select Facility</div>
                     </div>
-                    <div>
-                      <q-btn-dropdown :label="typeName" no-caps>
+                    <div class="col-12">
+                      <q-btn-dropdown class="btnfullwidth" :label="typeName" no-caps>
                         <q-list v-for="ftype in types" :key="ftype.typeId">
                           <q-item clickable v-close-popup @click="selectType(ftype)">
                             <q-item-section>
@@ -76,8 +76,8 @@
 
                 </div>
               </div>
-              <div v-if="this.showTimes" class="col">
-                <div class="q-pa-md q-gutter-sm" padding>
+              <div v-if="showTimes" class="col-xs-12 col-sm-8 col-md-6">
+                <div class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>
                   <q-btn color="primary" label="07:30 am" />
                   <q-btn color="primary" label="08:30 am" />
                   <q-btn color="primary" label="09:30 am" />
@@ -232,10 +232,6 @@ export default class ScheduleAppointment extends Vue {
      typeId: '4',
       typeName: 'Blood Test',
     },
-    {
-      typeId: '5',
-      typeName: 'Routine Checkup',
-    },
   ];
 
   public selectDoctor(doctor: any) {
@@ -308,4 +304,6 @@ export default class ScheduleAppointment extends Vue {
   color #c10015
   font-size 12px
   padding 8px 0 0
+.btnfullwidth
+  width 100%
 </style>
