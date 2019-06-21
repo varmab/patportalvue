@@ -32,11 +32,11 @@
                       </template>
                     </q-input>
                     <div class="col-12">
-                      <q-btn-dropdown class="btn-full-width" :label="doctorName" no-caps>
-                        <q-list v-for="doctor in doctors" :key="doctor.doctorId">
+                      <q-btn-dropdown class="btn-full-width" :label="DctName" no-caps>
+                        <q-list v-for="doctor in doctors" :key="doctor.DctId">
                           <q-item clickable v-close-popup @click="selectDoctor(doctor)">
                             <q-item-section>
-                              <q-item-label>{{doctor.doctorName}}</q-item-label>
+                              <q-item-label>{{doctor.DctName}}</q-item-label>
                             </q-item-section>
                           </q-item>
                         </q-list>
@@ -44,11 +44,11 @@
                       <div class="customErr" v-if="doctorErr">Please select Doctor</div>
                     </div>
                     <div class="col-12">
-                      <q-btn-dropdown class="btn-full-width" :label="facilityName" no-caps>
-                        <q-list v-for="facility in facilities" :key="facility.facilityId">
+                      <q-btn-dropdown class="btn-full-width" :label="FclDesc" no-caps>
+                        <q-list v-for="facility in facilities" :key="facility.FclId">
                           <q-item clickable v-close-popup @click="selectFacility(facility)">
                             <q-item-section>
-                              <q-item-label>{{facility.facilityName}}</q-item-label>
+                              <q-item-label>{{facility.FclDesc}}</q-item-label>
                             </q-item-section>
                           </q-item>
                         </q-list>
@@ -56,16 +56,16 @@
                       <div class="customErr" v-if="facilityErr">Please select Facility</div>
                     </div>
                     <div class="col-12">
-                      <q-btn-dropdown class="btn-full-width" :label="typeName" no-caps>
+                      <q-btn-dropdown class="btn-full-width" :label="AppType" no-caps>
                         <q-list v-for="ftype in types" :key="ftype.typeId">
                           <q-item clickable v-close-popup @click="selectType(ftype)">
                             <q-item-section>
-                              <q-item-label>{{ftype.typeName}}</q-item-label>
+                              <q-item-label>{{ftype.AppType}}</q-item-label>
                             </q-item-section>
                           </q-item>
                         </q-list>
                       </q-btn-dropdown>
-                      <div class="customErr" v-if="typeErr">Please select Facility Type</div>
+                      <div class="customErr" v-if="typeErr">Please select Appointment Type</div>
                     </div>
 
                     <div>
@@ -107,114 +107,114 @@ export default class ScheduleAppointment extends Vue {
   public showTimes = false;
   public date = date.formatDate(Date.now(), 'YYYY-MM-DD');
   public doctorErr = false;
-  public doctorId = '';
-  public doctorName = 'Select Doctor';
+  public DctId = '';
+  public DctName = 'Select Doctor';
   public doctors = [
     {
-      doctorId: '1',
-      doctorName: 'John Doe',
+      DctId: '1',
+      DctName: 'John Doe',
     },
     {
-      doctorId: '2',
-      doctorName: 'Mike',
+      DctId: '2',
+      DctName: 'Mike',
     },
     {
-      doctorId: '3',
-      doctorName: 'Stella',
+      DctId: '3',
+      DctName: 'Stella',
     },
     {
-      doctorId: '4',
-      doctorName: 'Dr Smith',
+      DctId: '4',
+      DctName: 'Dr Smith',
     },
     {
-      doctorId: '5',
-      doctorName: 'Alexa',
+      DctId: '5',
+      DctName: 'Alexa',
     },
     {
-      doctorId: '6',
-      doctorName: 'Cortana',
+      DctId: '6',
+      DctName: 'Cortana',
     },
     {
-      doctorId: '7',
-      doctorName: 'Mr Bella',
+      DctId: '7',
+      DctName: 'Mr Bella',
     },
     {
-      doctorId: '8',
-      doctorName: 'Dr Bravo',
+      DctId: '8',
+      DctName: 'Dr Bravo',
     },
     {
-      doctorId: '9',
-      doctorName: 'Alexis',
+      DctId: '9',
+      DctName: 'Alexis',
     },
     {
-      doctorId: '10',
-      doctorName: 'Cortanaa',
+      DctId: '10',
+      DctName: 'Cortanaa',
     },
   ];
   public facilityErr = false;
-  public facilityId = '';
-  public facilityName = 'Select Facility';
+  public FclId = '';
+  public FclDesc = 'Select Facility';
   public facilities = [
     {
-      facilityId: '1',
-      facilityName: 'Neurologist',
+      FclId: '1',
+      FclDesc: 'Neurologist',
     },
     {
-      facilityId: '2',
-      facilityName: 'Skin Specialist',
+      FclId: '2',
+      FclDesc: 'Skin Specialist',
     },
     {
-      facilityId: '3',
-      facilityName: 'Brain Specailist',
+      FclId: '3',
+      FclDesc: 'Brain Specailist',
     },
     {
-     facilityId: '4',
-      facilityName: 'Gynaecologist',
+     FclId: '4',
+      FclDesc: 'Gynaecologist',
     },
     {
-      facilityId: '5',
-      facilityName: 'Dentist',
+      FclId: '5',
+      FclDesc: 'Dentist',
     },
     {
-      facilityId: '6',
-      facilityName: 'Dermotologist',
+      FclId: '6',
+      FclDesc: 'Dermotologist',
     },
     {
-      facilityId: '7',
-      facilityName: 'Arthopedic',
+      FclId: '7',
+      FclDesc: 'Arthopedic',
     },
     {
-      facilityId: '8',
-      facilityName: 'Cardiologist',
+      FclId: '8',
+      FclDesc: 'Cardiologist',
     },
     {
-      facilityId: '9',
-      facilityName: 'Gynaecologist',
+      FclId: '9',
+      FclDesc: 'Gynaecologist',
     },
     {
-      facilityId: '10',
-      facilityName: 'Dermotologist',
+      FclId: '10',
+      FclDesc: 'Dermotologist',
     },
   ];
   public typeErr = false;
   public typeId = '';
-  public typeName = 'Select Facility Type';
+  public AppType = 'Select Appointment Type';
   public types = [
     {
       typeId: '1',
-      typeName: 'Routine Checkup',
+      AppType: 'Routine Checkup',
     },
     {
       typeId: '2',
-      typeName: 'Vaccinations',
+      AppType: 'Vaccinations',
     },
     {
       typeId: '3',
-      typeName: 'Eye Care',
+      AppType: 'Eye Care',
     },
     {
      typeId: '4',
-      typeName: 'Blood Test',
+      AppType: 'Blood Test',
     },
   ];
   public times = [
@@ -263,15 +263,15 @@ export default class ScheduleAppointment extends Vue {
     // tslint:disable-next-line:no-console
     console.log('selected doctor', doctor);
     this.doctorErr = false;
-    this.doctorId = doctor.doctorId;
-    this.doctorName = doctor.doctorName;
+    this.DctId = doctor.DctId;
+    this.DctName = doctor.DctName;
   }
   public selectFacility(facility: any) {
     // tslint:disable-next-line:no-console
     console.log('selected facility', facility);
     this.facilityErr = false;
-    this.facilityId = facility.facilityId;
-    this.facilityName = facility.facilityName;
+    this.FclId = facility.FclId;
+    this.FclDesc = facility.FclDesc;
   }
 
   public selectType(type: any) {
@@ -279,16 +279,16 @@ export default class ScheduleAppointment extends Vue {
     console.log('selected type', type);
     this.typeErr = false;
     this.typeId = type.typeId;
-    this.typeName = type.typeName;
+    this.AppType = type.AppType;
   }
   public onSubmit() {
-      if (this.doctorName === 'Select Doctor') {
+      if (this.DctName === 'Select Doctor') {
         this.doctorErr = true;
         this.showTimes = false;
-      } else if (this.facilityName === 'Select Facility') {
+      } else if (this.FclDesc === 'Select Facility') {
         this.facilityErr = true;
         this.showTimes = false;
-      } else if (this.typeName === 'Select Facility Type') {
+      } else if (this.AppType === 'Select Appointment Type') {
         this.typeErr = true;
         this.showTimes = false;
       } else {
@@ -305,13 +305,13 @@ export default class ScheduleAppointment extends Vue {
   public onReset() {
     this.showTimes = false;
     this.date = date.formatDate(Date.now(), 'YYYY-MM-DD');
-    this.doctorName = 'Select Doctor';
-    this.doctorId = '';
+    this.DctName = 'Select Doctor';
+    this.DctId = '';
     this.doctorErr = false;
-    this.facilityName = 'Select Facility';
-    this.facilityId = '';
+    this.FclDesc = 'Select Facility';
+    this.FclId = '';
     this.facilityErr = false;
-    this.typeName = 'Select Facility Type';
+    this.AppType = 'Select Appointment Type';
     this.typeId = '';
     this.typeErr = false;
   }

@@ -2,6 +2,7 @@
 
 module.exports = function (ctx) {
   return {
+    // preFetch: true,
     // Quasar looks for *.js files by default
     sourceFiles: {
       router: 'src/router/index.ts',
