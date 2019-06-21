@@ -78,23 +78,7 @@
               </div>
               <div v-if="showTimes" class="col-xs-12 col-sm-8 col-md-6">
                 <div class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>
-                  <q-btn color="primary" label="07:30 am" />
-                  <q-btn color="primary" label="08:30 am" />
-                  <q-btn color="primary" label="09:30 am" />
-                  <q-btn color="primary" label="10:30 am" />
-                  <q-btn color="primary" label="11:30 am" />
-                  <q-btn color="primary" label="12:30 pm" />
-                  <q-btn color="primary" label="01:30 pm" />
-                  <q-btn color="primary" label="02:30 pm" />
-                  <q-btn color="primary" label="03:30 pm" />
-                  <q-btn color="primary" label="04:30 pm" />
-                  <q-btn color="primary" label="05:30 pm" />
-                  <q-btn color="primary" label="06:30 pm" />
-                  <q-btn color="primary" label="07:30 pm" />
-                  <q-btn color="primary" label="08:30 pm" />
-                  <q-btn color="primary" label="09:30 pm" />
-                  <q-btn color="primary" label="10:30 pm" />
-                  <q-btn color="primary" label="11:30 pm" />
+                  <q-btn v-for="time in times" :key="time" color="primary" :label="time.time" />
                 </div>
               </div>
             </div>
@@ -233,6 +217,47 @@ export default class ScheduleAppointment extends Vue {
       typeName: 'Blood Test',
     },
   ];
+  public times = [
+    {
+      time: '07:30 am',
+    },
+    {
+      time: '08:30 am',
+    },
+    {
+      time: '09:30 am',
+    },
+    {
+      time: '10:30 am',
+    },
+    {
+      time: '11:30 am',
+    },
+    {
+      time: '12:30 pm',
+    },
+    {
+      time: '01:30 pm',
+    },
+    {
+      time: '02:30 pm',
+    },
+    {
+      time: '03:30 pm',
+    },
+    {
+      time: '04:30 pm',
+    },
+    {
+      time: '05:30 pm',
+    },
+    {
+      time: '06:30 pm',
+    },
+    {
+      time: '07:30 pm',
+    },
+  ];
 
   public selectDoctor(doctor: any) {
     // tslint:disable-next-line:no-console
@@ -272,7 +297,7 @@ export default class ScheduleAppointment extends Vue {
           color: 'green-4',
           textColor: 'white',
           icon: 'fas fa-check-circle',
-          message: 'Please select the time to request an appointment',
+          message: 'Please select time to request an appointment',
         });
       }
   }
