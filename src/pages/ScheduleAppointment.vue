@@ -11,7 +11,7 @@
         <q-card-section>
           <div class="q-pa-md">
             <div class="row">
-              <div class="col-xs-12 col-sm-4 col-md-6">
+              <div class="margin-auto">
                 <div class="q-pa-xs" style="max-width: 400px">
                   <q-form
                     @submit="onSubmit"
@@ -32,7 +32,7 @@
                       </template>
                     </q-input>
                     <div class="col-12">
-                      <q-btn-dropdown class="btnfullwidth" :label="doctorName" no-caps>
+                      <q-btn-dropdown class="btn-full-width" :label="doctorName" no-caps>
                         <q-list v-for="doctor in doctors" :key="doctor.doctorId">
                           <q-item clickable v-close-popup @click="selectDoctor(doctor)">
                             <q-item-section>
@@ -44,7 +44,7 @@
                       <div class="customErr" v-if="doctorErr">Please select Doctor</div>
                     </div>
                     <div class="col-12">
-                      <q-btn-dropdown class="btnfullwidth" :label="facilityName" no-caps>
+                      <q-btn-dropdown class="btn-full-width" :label="facilityName" no-caps>
                         <q-list v-for="facility in facilities" :key="facility.facilityId">
                           <q-item clickable v-close-popup @click="selectFacility(facility)">
                             <q-item-section>
@@ -56,7 +56,7 @@
                       <div class="customErr" v-if="facilityErr">Please select Facility</div>
                     </div>
                     <div class="col-12">
-                      <q-btn-dropdown class="btnfullwidth" :label="typeName" no-caps>
+                      <q-btn-dropdown class="btn-full-width" :label="typeName" no-caps>
                         <q-list v-for="ftype in types" :key="ftype.typeId">
                           <q-item clickable v-close-popup @click="selectType(ftype)">
                             <q-item-section>
@@ -272,7 +272,7 @@ export default class ScheduleAppointment extends Vue {
           color: 'green-4',
           textColor: 'white',
           icon: 'fas fa-check-circle',
-          message: 'Please select the time to request appointment',
+          message: 'Please select the time to request an appointment',
         });
       }
   }
@@ -304,6 +304,8 @@ export default class ScheduleAppointment extends Vue {
   color #c10015
   font-size 12px
   padding 8px 0 0
-.btnfullwidth
+.btn-full-width
   width 100%
+.margin-auto
+  margin 0 auto
 </style>
