@@ -33,7 +33,7 @@
                     </q-input>
                     <div class="col-12">
                       <q-btn-dropdown class="btn-full-width" :label="DctName" no-caps>
-                        <q-list v-for="doctor in doctors" :key="doctor.DctId">
+                        <q-list v-for="doctor in allDoctors" :key="doctor.DctId">
                           <q-item clickable v-close-popup @click="selectDoctor(doctor)">
                             <q-item-section>
                               <q-item-label>{{doctor.DctName}}</q-item-label>
@@ -45,7 +45,7 @@
                     </div>
                     <div class="col-12">
                       <q-btn-dropdown class="btn-full-width" :label="FclDesc" no-caps>
-                        <q-list v-for="facility in facilities" :key="facility.FclId">
+                        <q-list v-for="facility in allFacilities" :key="facility.FclId">
                           <q-item clickable v-close-popup @click="selectFacility(facility)">
                             <q-item-section>
                               <q-item-label>{{facility.FclDesc}}</q-item-label>
@@ -78,7 +78,7 @@
               </div>
               <div v-if="showTimes" class="col-xs-12 col-sm-8 col-md-6">
                 <div class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>
-                  <q-btn v-for="time in times" :key="time" color="primary" :label="time.time" />
+                  <q-btn v-for="time in times" :key="time" color="primary" :label="time.time" @click="createAppointment(time)" />
                 </div>
               </div>
             </div>
@@ -93,6 +93,7 @@
 </style>
 
 <script lang="ts">
+import gql from 'graphql-tag';
 import { date } from 'quasar';
 import { Component, Mixins, Vue } from 'vue-property-decorator';
 
@@ -109,93 +110,11 @@ export default class ScheduleAppointment extends Vue {
   public doctorErr = false;
   public DctId = '';
   public DctName = 'Select Doctor';
-  public doctors = [
-    {
-      DctId: '1',
-      DctName: 'John Doe',
-    },
-    {
-      DctId: '2',
-      DctName: 'Mike',
-    },
-    {
-      DctId: '3',
-      DctName: 'Stella',
-    },
-    {
-      DctId: '4',
-      DctName: 'Dr Smith',
-    },
-    {
-      DctId: '5',
-      DctName: 'Alexa',
-    },
-    {
-      DctId: '6',
-      DctName: 'Cortana',
-    },
-    {
-      DctId: '7',
-      DctName: 'Mr Bella',
-    },
-    {
-      DctId: '8',
-      DctName: 'Dr Bravo',
-    },
-    {
-      DctId: '9',
-      DctName: 'Alexis',
-    },
-    {
-      DctId: '10',
-      DctName: 'Cortanaa',
-    },
-  ];
+  public allDoctors = [];
   public facilityErr = false;
   public FclId = '';
   public FclDesc = 'Select Facility';
-  public facilities = [
-    {
-      FclId: '1',
-      FclDesc: 'Neurologist',
-    },
-    {
-      FclId: '2',
-      FclDesc: 'Skin Specialist',
-    },
-    {
-      FclId: '3',
-      FclDesc: 'Brain Specailist',
-    },
-    {
-     FclId: '4',
-      FclDesc: 'Gynaecologist',
-    },
-    {
-      FclId: '5',
-      FclDesc: 'Dentist',
-    },
-    {
-      FclId: '6',
-      FclDesc: 'Dermotologist',
-    },
-    {
-      FclId: '7',
-      FclDesc: 'Arthopedic',
-    },
-    {
-      FclId: '8',
-      FclDesc: 'Cardiologist',
-    },
-    {
-      FclId: '9',
-      FclDesc: 'Gynaecologist',
-    },
-    {
-      FclId: '10',
-      FclDesc: 'Dermotologist',
-    },
-  ];
+  public allFacilities = [];
   public typeErr = false;
   public typeId = '';
   public AppType = 'Select Appointment Type';
@@ -261,16 +180,50 @@ export default class ScheduleAppointment extends Vue {
 
   public created() {
     this.getDoctors();
-    this.getFacilities();
+  }
+
+  public mounted() {
+    // this.getFacilities();
   }
 
   public getDoctors() {
-    // tslint:disable-next-line:no-console
-    console.log('get doctors called');
+    this.$apollo.query({
+        query: gql`query allDoctors ($connection: ConnectionInput) {
+          allDoctors(connection: $connection) {
+            DctId
+            DctName
+        }
+      }`,
+      variables: {
+          connection: this.$data.connection,
+      },
+      }).then((data: any) => {
+          this.allDoctors = data.data.allDoctors;
+          this.getFacilities();
+      }).catch((error: any) => {
+          // tslint:disable-next-line:no-console
+          console.error('error in get all doctors: ', error);
+      });
   }
   public getFacilities() {
-    // tslint:disable-next-line:no-console
-    console.log('get getFacilities called');
+    this.$apollo.query({
+      query: gql`query allFacilities ($connection: ConnectionInput) {
+        allFacilities(connection: $connection) {
+          FclId
+          FclDesc
+      }
+    }`,
+      variables() {
+        return {
+          connection: this.$data.connection,
+        };
+      },
+    }).then((data: any) => {
+      this.allFacilities = data.data.allFacilities;
+    }).catch((error: any) => {
+      // tslint:disable-next-line:no-console
+      console.error('error in get all facilities: ', error);
+    });
   }
 
   public selectDoctor(doctor: any) {
@@ -314,6 +267,56 @@ export default class ScheduleAppointment extends Vue {
           message: 'Please select time to request an appointment',
         });
       }
+  }
+
+  public createAppointment(time: any) {
+    // tslint:disable-next-line:no-console
+    const appointment = {
+      PatId: '1',
+      PatName: 'XYZ',
+      FclId: this.FclId,
+      DctId: this.DctId,
+      Duration: 60,
+      AppType: this.AppType,
+      AppDateTime: this.date,
+    };
+    const connectionDetails = {};
+    // tslint:disable-next-line:no-console
+    console.log('aptobj', appointment);
+    this.$apollo.mutate({
+      // Query
+      mutation: gql`mutation ($connection: ConnectionInput, $appointment: AppointmentInput) {
+        createAppointment(connection: $connection, appointment: $appointment) {
+          RecNo
+          PatId
+          DctId
+          FclId
+          Duration
+          AppType
+          AppDateTime
+          EntryDateTime
+        }
+      }`,
+      // Parameters
+      variables: {
+        appointment,
+        connection: connectionDetails,
+      },
+    }).then((data: any) => {
+      // tslint:disable-next-line:no-console
+      console.log('data', data);
+      this.$q.notify({
+        color: 'green-4',
+        textColor: 'white',
+        icon: 'fas fa-check-circle',
+        message: 'Appointment created successfully!',
+      });
+      this.onReset();
+      this.$router.push('/');
+    }).catch((error: any) => {
+      // tslint:disable-next-line:no-console
+      console.error('error in api call: ', error);
+    });
   }
 
   public onReset() {
