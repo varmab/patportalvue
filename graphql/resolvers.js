@@ -28,7 +28,7 @@ var getConfig = (connection) => {
   return {
     user: "sa",
     password: "Hangten#16",
-    server: "3.95.224.108",
+    server: "18.208.153.181",
     options: {
       instance: "SQLExpress",
       database: "calmed"

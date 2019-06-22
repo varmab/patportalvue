@@ -259,6 +259,20 @@ export default class ScheduleAppointment extends Vue {
     },
   ];
 
+  public created() {
+    this.getDoctors();
+    this.getFacilities();
+  }
+
+  public getDoctors() {
+    // tslint:disable-next-line:no-console
+    console.log('get doctors called');
+  }
+  public getFacilities() {
+    // tslint:disable-next-line:no-console
+    console.log('get getFacilities called');
+  }
+
   public selectDoctor(doctor: any) {
     // tslint:disable-next-line:no-console
     console.log('selected doctor', doctor);

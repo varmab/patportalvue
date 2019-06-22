@@ -5,7 +5,7 @@
 **2. Open project:**
 > cd patportalvue
 
-**3. Add** ```.postcssrc.js``` **file under root directory of the project**
+**3. Add** ```.postcssrc.js``` **file under root directory of the project and place the below code in it**
 ```
 // https://github.com/michael-ciniawsky/postcss-load-config
 
