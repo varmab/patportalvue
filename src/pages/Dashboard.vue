@@ -27,7 +27,7 @@ import { Component, Mixins, Vue } from 'vue-property-decorator';
     };
   },
 })
-export default class PageDashboard extends Vue {
+export default class Dashboard extends Vue {
   public columns = [
     { name: 'Date', align: 'left', label: 'Date', field: 'date', sortable: true },
     { name: 'Doctor',
@@ -104,9 +104,9 @@ export default class PageDashboard extends Vue {
     },
   ];
   public connection = {};
+  public path = '';
   public created() {
-    // tslint:disable-next-line:no-console
-    console.log('params', this.$route.params);
+    this.path = this.$route.path;
     const str = decodeURIComponent(this.$route.path).substring(1);
     // tslint:disable-next-line:no-console
     console.log('str coming', str);
@@ -115,13 +115,15 @@ export default class PageDashboard extends Vue {
     const serverIndex = str.indexOf(',server:');
     const instanceIndex = str.indexOf(',instance:');
     const dbIndex = str.indexOf(',database:');
-
     const dbLast = str.indexOf('}');
+    const patIdIndex = str.indexOf('/PatId=');
+
     const user = str.slice(userIndex, pwdIndex - 1);
     const password = str.slice(pwdIndex + 12, serverIndex - 1);
     const server = str.slice(serverIndex + 10, instanceIndex - 1);
     const instance = str.slice(instanceIndex + 12, dbIndex - 1);
     const database = str.slice(dbIndex + 12, dbLast - 1);
+    const PatId = str.slice(patIdIndex + 8, str.length - 1);
 
     const obj: any = {};
     obj.user = user;
@@ -129,9 +131,10 @@ export default class PageDashboard extends Vue {
     obj.server = server;
     obj.instance = instance;
     obj.database = database;
-    // tslint:disable-next-line:no-console
-    console.log('connection to set', obj);
+    obj.PatId = PatId;
     this.connection = obj;
+    // tslint:disable-next-line:no-console
+    console.log('connection to set', this.connection, this.path);
   }
 }
 </script>

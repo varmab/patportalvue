@@ -8,17 +8,8 @@ const routes: RouteConfig[] = [
     path: '/',
     component: () => import('layouts/MyLayout.vue'),
     children: [
-      { path: ':connection', component: () => import('pages/Dashboard.vue') },
-    ],
-  },
-  {
-    path: '/',
-    component: () => import('layouts/MyLayout.vue'),
-    children: [
-      {
-        path: 'schedule',
-        component: () => import('pages/ScheduleAppointment.vue'),
-      },
+      { path: 'list/:connection/:PatId', component: () => import('pages/Dashboard.vue') },
+      { path: 'schedule', component: () => import('pages/ScheduleAppointment.vue')},
     ],
   },
 ];
