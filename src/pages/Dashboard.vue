@@ -105,8 +105,8 @@ export default class Dashboard extends Vue {
   ];
   public connection = {};
   public path = '';
+  public PatId = '';
   public created() {
-    this.path = this.$route.path;
     const str = decodeURIComponent(this.$route.path).substring(1);
     // tslint:disable-next-line:no-console
     console.log('str coming', str);
@@ -131,12 +131,14 @@ export default class Dashboard extends Vue {
     obj.server = server;
     obj.instance = instance;
     obj.database = database;
-    obj.PatId = PatId;
+    this.PatId = PatId;
     this.connection = obj;
+    this.path = this.$route.path;
     // this.$store.commit('SET_CONNECTION_STRING', this.connection);
     // this.$store.commit('SET_PATH', this.path);
     this.$store.dispatch('SET_CONNECTION_ASYNC', this.connection);
     this.$store.dispatch('SET_PATH_ASYNC', this.path);
+    this.$store.dispatch('SET_PATID_ASYNC', this.PatId);
   }
 }
 </script>

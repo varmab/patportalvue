@@ -9,6 +9,7 @@ export default new Vuex.Store({
   state: {
     connectionString: {},
     path: '',
+    PatId: '',
   },
   mutations: {
     SET_CONNECTION_STRING(state, connection) {
@@ -17,6 +18,9 @@ export default new Vuex.Store({
     SET_PATH(state, path) {
       state.path = path;
     },
+    SET_PATID(state, PatId) {
+      state.PatId = PatId;
+    },
   },
   actions: {
     SET_CONNECTION_ASYNC(context, connection) {
@@ -24,6 +28,9 @@ export default new Vuex.Store({
     },
     SET_PATH_ASYNC(context, path) {
       context.commit('SET_PATH', path);
+    },
+    SET_PATID_ASYNC(context, PatId) {
+      context.commit('SET_PATID', PatId);
     },
   },
 });

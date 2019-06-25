@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="q-px-md q-py-sm q-gutter-sm">
-      <q-btn color="primary" class="block" icon="keyboard_backspace" label="Back" no-caps @click="$router.push('/')"/>
+      <q-btn color="primary" class="block" icon="keyboard_backspace" label="Back" no-caps @click="$router.push(`${path}`)"/>
     </div>
     <div class="q-pa-md">
       <q-card class="my-card">
@@ -105,6 +105,8 @@ import { Component, Mixins, Vue } from 'vue-property-decorator';
   },
 })
 export default class ScheduleAppointment extends Vue {
+  public connection = {};
+  public path = '';
   public showTimes = false;
   public date = date.formatDate(Date.now(), 'YYYY-MM-DD');
   public doctorErr = false;
@@ -179,11 +181,14 @@ export default class ScheduleAppointment extends Vue {
   ];
 
   public created() {
-    this.getDoctors();
+    const connection = this.$store.state.connectionString;
+    const path = this.$store.state.path;
+    this.connection = connection;
+    this.path = path;
   }
 
   public mounted() {
-    // this.getFacilities();
+    this.getDoctors();
   }
 
   public getDoctors() {
@@ -195,7 +200,7 @@ export default class ScheduleAppointment extends Vue {
         }
       }`,
       variables: {
-          connection: this.$data.connection,
+          connection: this.connection,
       },
       }).then((data: any) => {
           this.allDoctors = data.data.allDoctors;
@@ -213,10 +218,8 @@ export default class ScheduleAppointment extends Vue {
           FclDesc
       }
     }`,
-      variables() {
-        return {
-          connection: this.$data.connection,
-        };
+      variables: {
+          connection: this.connection,
       },
     }).then((data: any) => {
       this.allFacilities = data.data.allFacilities;
@@ -272,7 +275,7 @@ export default class ScheduleAppointment extends Vue {
   public createAppointment(time: any) {
     // tslint:disable-next-line:no-console
     const appointment = {
-      PatId: '1',
+      PatId: this.$store.state.PatId,
       PatName: 'XYZ',
       FclId: this.FclId,
       DctId: this.DctId,
@@ -280,7 +283,7 @@ export default class ScheduleAppointment extends Vue {
       AppType: this.AppType,
       AppDateTime: this.date,
     };
-    const connectionDetails = {};
+    const connectionDetails = this.$store.state.connectionString;
     // tslint:disable-next-line:no-console
     console.log('aptobj', appointment);
     this.$apollo.mutate({

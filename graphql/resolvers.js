@@ -12,28 +12,28 @@ var generateUUID = () => {
 };
 
 var getConfig = (connection) => {
-  // if (connection) {
-  //   console.log('got connection')
-  //   return {
-  //     user: connection.user,
-  //     password: connection.password,
-  //     server: connection.server,
-  //     options: {
-  //       instance: connection.instance,
-  //       database: connection.database
-  //     }
-  //   }
-  // }
-
-  return {
-    user: "sa",
-    password: "Hangten#16",
-    server: "18.208.153.181",
-    options: {
-      instance: "SQLExpress",
-      database: "calmed"
+  if (connection) {
+    console.log('got connection',connection)
+    return {
+      user: connection.user,
+      password: connection.password,
+      server: connection.server,
+      options: {
+        instance: connection.instance,
+        database: connection.database
+      }
     }
-  };
+  }
+
+  // return {
+  //   user: "sa",
+  //   password: "Hangten#16",
+  //   server: "18.208.153.181",
+  //   options: {
+  //     instance: "SQLExpress",
+  //     database: "calmed"
+  //   }
+  // };
 }
 
 const resolvers = {
@@ -41,10 +41,11 @@ const resolvers = {
     allDoctors: (_, {
       connection
     }) => {
-      console.log('allDoctors')
+      console.log('allDoctors', connection)
       return new Promise(async (resolve, reject) => {
         try {
           var config = getConfig(connection)
+          console.log('connection coming', config)
           await sql.close();
           await sql.connect(config);
           let result = await sql.query('select DctId, DctName from calmed.dbo.xrxDct')
@@ -61,10 +62,11 @@ const resolvers = {
     allFacilities: (_, {
       connection
     }) => {
-      console.log('allFacilities')
+      console.log('allFacilities', connection)
       return new Promise(async (resolve, reject) => {
         try {
           var config = getConfig(connection)
+          console.log('connection coming', config)
           await sql.close();
           await sql.connect(config);
           let result = await sql.query('select FclId, FclDesc from calmed.dbo.xrxFcl')
@@ -87,6 +89,7 @@ const resolvers = {
       return new Promise(async (resolve, reject) => {
         try {
           var config = getConfig(connection)
+          console.log('connection coming', config)
           await sql.close();
           await sql.connect(config);
           var recNo = generateUUID();
