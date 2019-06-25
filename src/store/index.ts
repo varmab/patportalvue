@@ -7,13 +7,24 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-
+    connectionString: {},
+    path: '',
   },
   mutations: {
-
+    SET_CONNECTION_STRING(state, connection) {
+      state.connectionString = connection;
+    },
+    SET_PATH(state, path) {
+      state.path = path;
+    },
   },
   actions: {
-
+    SET_CONNECTION_ASYNC(context, connection) {
+      context.commit('SET_CONNECTION_STRING', connection);
+    },
+    SET_PATH_ASYNC(context, path) {
+      context.commit('SET_PATH', path);
+    },
   },
 });
 

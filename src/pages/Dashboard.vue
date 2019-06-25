@@ -133,8 +133,10 @@ export default class Dashboard extends Vue {
     obj.database = database;
     obj.PatId = PatId;
     this.connection = obj;
-    // tslint:disable-next-line:no-console
-    console.log('connection to set', this.connection, this.path);
+    // this.$store.commit('SET_CONNECTION_STRING', this.connection);
+    // this.$store.commit('SET_PATH', this.path);
+    this.$store.dispatch('SET_CONNECTION_ASYNC', this.connection);
+    this.$store.dispatch('SET_PATH_ASYNC', this.path);
   }
 }
 </script>
