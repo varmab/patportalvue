@@ -103,5 +103,35 @@ export default class PageDashboard extends Vue {
       date: '2019-07-14',
     },
   ];
+  public connection = {};
+  public created() {
+    // tslint:disable-next-line:no-console
+    console.log('params', this.$route.params);
+    const str = decodeURIComponent(this.$route.path).substring(1);
+    // tslint:disable-next-line:no-console
+    console.log('str coming', str);
+    const userIndex = str.indexOf('user:') + 7;
+    const pwdIndex = str.indexOf(',password:');
+    const serverIndex = str.indexOf(',server:');
+    const instanceIndex = str.indexOf(',instance:');
+    const dbIndex = str.indexOf(',database:');
+
+    const dbLast = str.indexOf('}');
+    const user = str.slice(userIndex, pwdIndex - 1);
+    const password = str.slice(pwdIndex + 12, serverIndex - 1);
+    const server = str.slice(serverIndex + 10, instanceIndex - 1);
+    const instance = str.slice(instanceIndex + 12, dbIndex - 1);
+    const database = str.slice(dbIndex + 12, dbLast - 1);
+
+    const obj: any = {};
+    obj.user = user;
+    obj.password = password;
+    obj.server = server;
+    obj.instance = instance;
+    obj.database = database;
+    // tslint:disable-next-line:no-console
+    console.log('connection to set', obj);
+    this.connection = obj;
+  }
 }
 </script>
