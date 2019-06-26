@@ -96,6 +96,27 @@ const resolvers = {
           await sql.close();
         }
       })
+    },
+    patientAppointmentsList: (_, {
+      connection,
+      PatId
+    }) => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          var config = getConfig(connection)
+          console.log('patientAppointmentsList', config, PatId)
+          await sql.close();
+          await sql.connect(config);
+          let result = await sql.query(`SELECT RecNo,PatId,DctId,FclId,Duration,AppType,AppDateTime,EntryDateTime FROM calmed.dbo.xrxAppSch`)
+          await sql.close();
+          resolve(result.recordset)
+        } catch (err) {
+          await sql.close();
+          reject(err)
+        } finally {
+          await sql.close();
+        }
+      })
     }
   },
   Mutation: {

@@ -19,6 +19,9 @@ let typeDefs = `
     AppDateTime: String
     EntryDateTime: String
   }
+  input PatIdInput {
+    PatId: ID
+  }
   
   type DoctorType {
     RecNo: ID
@@ -54,6 +57,7 @@ let typeDefs = `
     allDoctors(connection:ConnectionInput) : [DoctorType]
     allFacilities(connection:ConnectionInput) : [FacilityType]
     allAppointmentTypes(connection:ConnectionInput) : [AppointmentType]
+    patientAppointmentsList(connection:ConnectionInput,PatId:PatIdInput) : [CreateAppointmentType]
   }
   
   type Mutation {
