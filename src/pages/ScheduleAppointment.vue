@@ -315,7 +315,7 @@ export default class ScheduleAppointment extends Vue {
         message: 'Appointment created successfully!',
       });
       this.onReset();
-      this.$router.push('/');
+      this.$router.push(`${this.path}`);
     }).catch((error: any) => {
       // tslint:disable-next-line:no-console
       console.error('error in api call: ', error);

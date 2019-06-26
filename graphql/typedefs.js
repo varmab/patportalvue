@@ -34,7 +34,7 @@ let typeDefs = `
     ShowInPortal: Boolean
   }
 
-  type AppointmentType {
+  type CreateAppointmentType {
     RecNo: ID
     PatId: ID
     DctId: ID
@@ -45,13 +45,38 @@ let typeDefs = `
     EntryDateTime: String
   }
 
+  type AppointmentType {
+    RecNo: ID
+    Type: String
+    Color: Int
+    BookColor: Int
+    Description: String
+    Panel: String
+    icd1: String
+    icd2: String
+    icd3: String
+    icd4: String
+    icd5: String
+    icd6: String
+    icd7: String
+    icd8: String
+    UseBookColor: Boolean
+    Duration: Int
+    MaxApps: Int
+    Remark: Boolean
+    EntryDate: String
+    UserId: String
+    ShowInPortal: Boolean
+  }
+
   type Query {
     allDoctors(connection:ConnectionInput) : [DoctorType]
     allFacilities(connection:ConnectionInput) : [FacilityType]
+    allAppointmentTypes(connection:ConnectionInput) : [AppointmentType]
   }
   
   type Mutation {
-    createAppointment(connection:ConnectionInput,appointment:AppointmentInput) : AppointmentType
+    createAppointment(connection:ConnectionInput,appointment:AppointmentInput) : CreateAppointmentType
   }
 `;
 

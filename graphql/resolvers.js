@@ -45,7 +45,6 @@ const resolvers = {
       return new Promise(async (resolve, reject) => {
         try {
           var config = getConfig(connection)
-          console.log('connection coming', config)
           await sql.close();
           await sql.connect(config);
           let result = await sql.query('select DctId, DctName from calmed.dbo.xrxDct')
@@ -66,10 +65,29 @@ const resolvers = {
       return new Promise(async (resolve, reject) => {
         try {
           var config = getConfig(connection)
-          console.log('connection coming', config)
           await sql.close();
           await sql.connect(config);
           let result = await sql.query('select FclId, FclDesc from calmed.dbo.xrxFcl')
+          await sql.close();
+          resolve(result.recordset)
+        } catch (err) {
+          await sql.close();
+          reject(err)
+        } finally {
+          await sql.close();
+        }
+      })
+    },
+    allAppointmentTypes: (_, {
+      connection
+    }) => {
+      console.log('allAppointmentTypes', connection)
+      return new Promise(async (resolve, reject) => {
+        try {
+          var config = getConfig(connection)
+          await sql.close();
+          await sql.connect(config);
+          let result = await sql.query('select [Type] from xrxAppType where isNull(ShowInPortal, 0) = 1')
           await sql.close();
           resolve(result.recordset)
         } catch (err) {
@@ -86,10 +104,10 @@ const resolvers = {
       connection,
       appointment
     }) => {
+      console.log('createAppointment', connection)
       return new Promise(async (resolve, reject) => {
         try {
           var config = getConfig(connection)
-          console.log('connection coming', config)
           await sql.close();
           await sql.connect(config);
           var recNo = generateUUID();
