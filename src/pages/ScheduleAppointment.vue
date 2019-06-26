@@ -56,11 +56,11 @@
                       <div class="customErr" v-if="facilityErr">Please select Facility</div>
                     </div>
                     <div class="col-12">
-                      <q-btn-dropdown class="btn-full-width" :label="AppType" no-caps>
-                        <q-list v-for="ftype in types" :key="ftype.typeId">
+                      <q-btn-dropdown class="btn-full-width" :label="Type" no-caps>
+                        <q-list v-for="ftype in allAppointmentTypes" :key="ftype.RecNo">
                           <q-item clickable v-close-popup @click="selectType(ftype)">
                             <q-item-section>
-                              <q-item-label>{{ftype.AppType}}</q-item-label>
+                              <q-item-label>{{ftype.Type}}</q-item-label>
                             </q-item-section>
                           </q-item>
                         </q-list>
@@ -118,26 +118,9 @@ export default class ScheduleAppointment extends Vue {
   public FclDesc = 'Select Facility';
   public allFacilities = [];
   public typeErr = false;
-  public typeId = '';
-  public AppType = 'Select Appointment Type';
-  public types = [
-    {
-      typeId: '1',
-      AppType: 'Routine Checkup',
-    },
-    {
-      typeId: '2',
-      AppType: 'Vaccinations',
-    },
-    {
-      typeId: '3',
-      AppType: 'Eye Care',
-    },
-    {
-     typeId: '4',
-      AppType: 'Blood Test',
-    },
-  ];
+  public RecNo = '';
+  public Type = 'Select Appointment Type';
+  public allAppointmentTypes = [];
   public times = [
     {
       time: '07:30 am',
@@ -197,14 +180,14 @@ export default class ScheduleAppointment extends Vue {
           allDoctors(connection: $connection) {
             DctId
             DctName
-        }
-      }`,
+          }
+        }`,
       variables: {
-          connection: this.connection,
+        connection: this.connection,
       },
       }).then((data: any) => {
-          this.allDoctors = data.data.allDoctors;
-          this.getFacilities();
+        this.allDoctors = data.data.allDoctors;
+        this.getFacilities();
       }).catch((error: any) => {
           // tslint:disable-next-line:no-console
           console.error('error in get all doctors: ', error);
@@ -216,16 +199,35 @@ export default class ScheduleAppointment extends Vue {
         allFacilities(connection: $connection) {
           FclId
           FclDesc
-      }
-    }`,
+        }
+      }`,
       variables: {
           connection: this.connection,
       },
     }).then((data: any) => {
       this.allFacilities = data.data.allFacilities;
+      this.getAppointmentTypes();
     }).catch((error: any) => {
       // tslint:disable-next-line:no-console
       console.error('error in get all facilities: ', error);
+    });
+  }
+  public getAppointmentTypes() {
+    this.$apollo.query({
+      query: gql`query allAppointmentTypes ($connection: ConnectionInput) {
+        allAppointmentTypes(connection: $connection) {
+          RecNo
+          Type
+        }
+      }`,
+      variables: {
+        connection: this.connection,
+      },
+    }).then((data: any) => {
+      this.allAppointmentTypes = data.data.allAppointmentTypes;
+    }).catch((error: any) => {
+      // tslint:disable-next-line:no-console
+      console.error('error in get all appointment types: ', error);
     });
   }
 
@@ -248,8 +250,8 @@ export default class ScheduleAppointment extends Vue {
     // tslint:disable-next-line:no-console
     console.log('selected type', type);
     this.typeErr = false;
-    this.typeId = type.typeId;
-    this.AppType = type.AppType;
+    this.RecNo = type.RecNo;
+    this.Type = type.Type;
   }
   public onSubmit() {
       if (this.DctName === 'Select Doctor') {
@@ -258,7 +260,7 @@ export default class ScheduleAppointment extends Vue {
       } else if (this.FclDesc === 'Select Facility') {
         this.facilityErr = true;
         this.showTimes = false;
-      } else if (this.AppType === 'Select Appointment Type') {
+      } else if (this.Type === 'Select Appointment Type') {
         this.typeErr = true;
         this.showTimes = false;
       } else {
@@ -280,7 +282,7 @@ export default class ScheduleAppointment extends Vue {
       FclId: this.FclId,
       DctId: this.DctId,
       Duration: 60,
-      AppType: this.AppType,
+      AppType: this.Type,
       AppDateTime: this.date,
     };
     const connectionDetails = this.$store.state.connectionString;
@@ -331,8 +333,8 @@ export default class ScheduleAppointment extends Vue {
     this.FclDesc = 'Select Facility';
     this.FclId = '';
     this.facilityErr = false;
-    this.AppType = 'Select Appointment Type';
-    this.typeId = '';
+    this.Type = 'Select Appointment Type';
+    this.RecNo = '';
     this.typeErr = false;
   }
 }

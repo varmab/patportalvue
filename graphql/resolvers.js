@@ -110,7 +110,7 @@ const resolvers = {
           await sql.close();
           await sql.connect(config);
           var recNo = generateUUID();
-          await sql.query(`INSERT INTO calmed.dbo.xrxAppSch(RecNo,PatId,PatName,DctId,FclId,AppType,Duration,AppDateTime) VALUES('${recNo}','${appointment.PatId}','${appointment.PatName}','${appointment.DctId}','${appointment.FclId}','Online',30,'${appointment.AppDateTime}')`)
+          await sql.query(`INSERT INTO calmed.dbo.xrxAppSch(RecNo,PatId,PatName,DctId,FclId,AppType,Duration,AppDateTime) VALUES('${recNo}','${appointment.PatId}','${appointment.PatName}','${appointment.DctId}','${appointment.FclId}','${appointment.AppType}','${appointment.Duration}','${appointment.AppDateTime}')`)
           let result = await sql.query(`SELECT * FROM calmed.dbo.xrxAppSch WHERE RecNo='${recNo}'`)
           console.log(JSON.stringify(result.recordset))
           await sql.close();
