@@ -76,7 +76,8 @@ module.exports = function (ctx) {
       plugins: [
         'Notify',
         'Meta',
-        'Cookies'
+        'Cookies',
+        'Loading'
       ]
 
       // iconSet: 'ionicons-v4'

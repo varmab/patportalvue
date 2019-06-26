@@ -78,7 +78,7 @@
               </div>
               <div v-if="showTimes" class="col-xs-12 col-sm-8 col-md-6">
                 <div class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>
-                  <q-btn v-for="time in times" :key="time" color="primary" :label="time.time" @click="createAppointment(time)" />
+                  <q-btn v-for="slot in times" :key="slot+1" color="primary" :label="slot.time" @click="createAppointment(slot)" />
                 </div>
               </div>
             </div>
@@ -175,6 +175,9 @@ export default class ScheduleAppointment extends Vue {
   }
 
   public getDoctors() {
+    this.$q.loading.show({
+        message: 'Please wait while fetching doctors, facilities and appointment types',
+      });
     this.$apollo.query({
         query: gql`query allDoctors ($connection: ConnectionInput) {
           allDoctors(connection: $connection) {
@@ -189,6 +192,7 @@ export default class ScheduleAppointment extends Vue {
         this.allDoctors = data.data.allDoctors;
         this.getFacilities();
       }).catch((error: any) => {
+          this.$q.loading.hide();
           // tslint:disable-next-line:no-console
           console.error('error in get all doctors: ', error);
       });
@@ -208,6 +212,7 @@ export default class ScheduleAppointment extends Vue {
       this.allFacilities = data.data.allFacilities;
       this.getAppointmentTypes();
     }).catch((error: any) => {
+      this.$q.loading.hide();
       // tslint:disable-next-line:no-console
       console.error('error in get all facilities: ', error);
     });
@@ -225,7 +230,9 @@ export default class ScheduleAppointment extends Vue {
       },
     }).then((data: any) => {
       this.allAppointmentTypes = data.data.allAppointmentTypes;
+      this.$q.loading.hide();
     }).catch((error: any) => {
+      this.$q.loading.hide();
       // tslint:disable-next-line:no-console
       console.error('error in get all appointment types: ', error);
     });
