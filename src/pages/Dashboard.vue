@@ -6,7 +6,7 @@
     <div class="q-pa-md">
       <q-table
         title="Patient Appointments"
-        :data="appointments"
+        :data="patientAppointmentsList"
         :columns="columns"
         row-key="name"
       />
@@ -29,78 +29,78 @@ import { Component, Mixins, Vue } from 'vue-property-decorator';
 })
 export default class Dashboard extends Vue {
   public columns = [
-    { name: 'Date', align: 'left', label: 'Date', field: 'date', sortable: true },
+    { name: 'Date', align: 'left', label: 'Date', field: 'AppDateTime', sortable: true },
     { name: 'Doctor',
       required: true,
       label: 'Doctor',
       align: 'center',
-      field: (row: any) => row.doctor,
+      field: (row: any) => row.DctName,
       format: (val: any) => `${val}`,
       sortable: false,
     },
-    { name: 'Facility', label: 'Facility', field: 'facility' },
-    { name: 'Appointment Type', label: 'Appointment Type', field: 'aptType' },
+    { name: 'Facility', label: 'Facility', field: 'FclDesc' },
+    { name: 'Appointment Type', label: 'Appointment Type', field: 'AppType' },
   ];
-  public appointments = [
+  public patientAppointmentsList = [
     {
-      aptType: 'Routine Checkup',
-      doctor: 'John Doe',
-      facility: 'Dermotologist',
-      date: '2019-06-14',
+      AppType: 'Routine Checkup',
+      DctName: 'John Doe',
+      FclDesc: 'Dermotologist',
+      AppDateTime: '2019-06-14',
     },
     {
-      aptType: 'Vaccinations',
-      doctor: 'Smith',
-      facility: 'Gynaecologist',
-      date: '2019-06-17',
+      AppType: 'Vaccinations',
+      DctName: 'Smith',
+      FclDesc: 'Gynaecologist',
+      AppDateTime: '2019-06-17',
     },
     {
-      aptType: 'Eye Care',
-      doctor: 'Bravo',
-      facility: 'Cardiologist',
-      date: '2019-06-16',
+      AppType: 'Eye Care',
+      DctName: 'Bravo',
+      FclDesc: 'Cardiologist',
+      AppDateTime: '2019-06-16',
     },
     {
-      aptType: 'Blood Test',
-      doctor: 'Mike',
-      facility: 'Arthopedic',
-      date: '2019-06-22',
+      AppType: 'Blood Test',
+      DctName: 'Mike',
+      FclDesc: 'Arthopedic',
+      AppDateTime: '2019-06-22',
     },
     {
-      aptType: 'Routine Checkup',
-      doctor: 'Alexis',
-      facility: 'Dermotologist',
-      date: '2019-07-14',
+      AppType: 'Routine Checkup',
+      DctName: 'Alexis',
+      FclDesc: 'Dermotologist',
+      AppDateTime: '2019-07-14',
     },
     {
-      aptType: 'Blood Test',
-      doctor: 'Kerr',
-      facility: 'Dentist',
-      date: '2019-06-24',
+      AppType: 'Blood Test',
+      DctName: 'Kerr',
+      FclDesc: 'Dentist',
+      AppDateTime: '2019-06-24',
     },
     {
-      aptType: 'BP Checkup',
-      doctor: 'Elon',
-      facility: 'Gynaecologist',
-      date: '2019-06-21',
+      AppType: 'BP Checkup',
+      DctName: 'Elon',
+      FclDesc: 'Gynaecologist',
+      AppDateTime: '2019-06-21',
     },
     {
-      aptType: 'Routine Checkup',
-      doctor: 'Kelly',
-      facility: 'Gynaecologist',
-      date: '2019-06-20',
+      AppType: 'Routine Checkup',
+      DctName: 'Kelly',
+      FclDesc: 'Gynaecologist',
+      AppDateTime: '2019-06-20',
     },
     {
-      aptType: 'Eear & Eye Checkup',
-      doctor: 'John',
-      facility: 'Arthopedic',
-      date: '2019-08-24',
+      AppType: 'Eear & Eye Checkup',
+      DctName: 'John',
+      FclDesc: 'Arthopedic',
+      AppDateTime: '2019-08-24',
     },
     {
-      aptType: 'Blood Test',
-      doctor: 'Richard',
-      facility: 'Neurologist',
-      date: '2019-07-14',
+      AppType: 'Blood Test',
+      DctName: 'Richard',
+      FclDesc: 'Neurologist',
+      AppDateTime: '2019-07-14',
     },
   ];
   public connection = {};

@@ -13,6 +13,8 @@ let typeDefs = `
     PatId: ID
     PatName: String
     DctId: ID
+    DctName: String
+    FclDesc: String
     FclId: ID
     Duration: Int
     AppType: String
