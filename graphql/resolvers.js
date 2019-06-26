@@ -13,7 +13,6 @@ var generateUUID = () => {
 
 var getConfig = (connection) => {
   if (connection) {
-    console.log('got connection',connection)
     return {
       user: connection.user,
       password: connection.password,
@@ -41,10 +40,10 @@ const resolvers = {
     allDoctors: (_, {
       connection
     }) => {
-      console.log('allDoctors', connection)
       return new Promise(async (resolve, reject) => {
         try {
           var config = getConfig(connection)
+          console.log('allDoctors', config)
           await sql.close();
           await sql.connect(config);
           let result = await sql.query('select DctId, DctName from calmed.dbo.xrxDct')
@@ -61,10 +60,10 @@ const resolvers = {
     allFacilities: (_, {
       connection
     }) => {
-      console.log('allFacilities', connection)
       return new Promise(async (resolve, reject) => {
         try {
           var config = getConfig(connection)
+          console.log('allFacilities', config)
           await sql.close();
           await sql.connect(config);
           let result = await sql.query('select FclId, FclDesc from calmed.dbo.xrxFcl')
@@ -81,13 +80,13 @@ const resolvers = {
     allAppointmentTypes: (_, {
       connection
     }) => {
-      console.log('allAppointmentTypes', connection)
       return new Promise(async (resolve, reject) => {
         try {
           var config = getConfig(connection)
+          console.log('allAppointmentTypes', config)
           await sql.close();
           await sql.connect(config);
-          let result = await sql.query('select [Type] from xrxAppType where isNull(ShowInPortal, 0) = 1')
+          let result = await sql.query('select RecNo, [Type] from calmed.dbo.xrxAppType')
           await sql.close();
           resolve(result.recordset)
         } catch (err) {
@@ -104,10 +103,10 @@ const resolvers = {
       connection,
       appointment
     }) => {
-      console.log('createAppointment', connection)
       return new Promise(async (resolve, reject) => {
         try {
           var config = getConfig(connection)
+          console.log('createAppointment', config)
           await sql.close();
           await sql.connect(config);
           var recNo = generateUUID();

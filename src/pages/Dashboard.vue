@@ -134,8 +134,7 @@ export default class Dashboard extends Vue {
     this.PatId = PatId;
     this.connection = obj;
     this.path = this.$route.path;
-    // this.$store.commit('SET_CONNECTION_STRING', this.connection);
-    // this.$store.commit('SET_PATH', this.path);
+    // Dispatching actions to set values
     this.$store.dispatch('SET_CONNECTION_ASYNC', this.connection);
     this.$store.dispatch('SET_PATH_ASYNC', this.path);
     this.$store.dispatch('SET_PATID_ASYNC', this.PatId);

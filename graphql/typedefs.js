@@ -46,27 +46,8 @@ let typeDefs = `
   }
 
   type AppointmentType {
-    RecNo: ID
+    RecNo: String
     Type: String
-    Color: Int
-    BookColor: Int
-    Description: String
-    Panel: String
-    icd1: String
-    icd2: String
-    icd3: String
-    icd4: String
-    icd5: String
-    icd6: String
-    icd7: String
-    icd8: String
-    UseBookColor: Boolean
-    Duration: Int
-    MaxApps: Int
-    Remark: Boolean
-    EntryDate: String
-    UserId: String
-    ShowInPortal: Boolean
   }
 
   type Query {
