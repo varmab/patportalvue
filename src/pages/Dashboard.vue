@@ -18,6 +18,8 @@
 </style>
 
 <script lang="ts">
+import gql from 'graphql-tag';
+import { date } from 'quasar';
 import { Component, Mixins, Vue } from 'vue-property-decorator';
 
 @Component({
@@ -29,7 +31,14 @@ import { Component, Mixins, Vue } from 'vue-property-decorator';
 })
 export default class Dashboard extends Vue {
   public columns = [
-    { name: 'Date', align: 'left', label: 'Date', field: 'AppDateTime', sortable: true },
+    {
+      name: 'Date',
+      align: 'left',
+      label: 'Date',
+      field: 'AppDateTime',
+      format: (val: any) => `${val}`,
+      sortable: true,
+    },
     { name: 'Doctor',
       required: true,
       label: 'Doctor',
@@ -41,71 +50,10 @@ export default class Dashboard extends Vue {
     { name: 'Facility', label: 'Facility', field: 'FclDesc' },
     { name: 'Appointment Type', label: 'Appointment Type', field: 'AppType' },
   ];
-  public patientAppointmentsList = [
-    {
-      AppType: 'Routine Checkup',
-      DctName: 'John Doe',
-      FclDesc: 'Dermotologist',
-      AppDateTime: '2019-06-14',
-    },
-    {
-      AppType: 'Vaccinations',
-      DctName: 'Smith',
-      FclDesc: 'Gynaecologist',
-      AppDateTime: '2019-06-17',
-    },
-    {
-      AppType: 'Eye Care',
-      DctName: 'Bravo',
-      FclDesc: 'Cardiologist',
-      AppDateTime: '2019-06-16',
-    },
-    {
-      AppType: 'Blood Test',
-      DctName: 'Mike',
-      FclDesc: 'Arthopedic',
-      AppDateTime: '2019-06-22',
-    },
-    {
-      AppType: 'Routine Checkup',
-      DctName: 'Alexis',
-      FclDesc: 'Dermotologist',
-      AppDateTime: '2019-07-14',
-    },
-    {
-      AppType: 'Blood Test',
-      DctName: 'Kerr',
-      FclDesc: 'Dentist',
-      AppDateTime: '2019-06-24',
-    },
-    {
-      AppType: 'BP Checkup',
-      DctName: 'Elon',
-      FclDesc: 'Gynaecologist',
-      AppDateTime: '2019-06-21',
-    },
-    {
-      AppType: 'Routine Checkup',
-      DctName: 'Kelly',
-      FclDesc: 'Gynaecologist',
-      AppDateTime: '2019-06-20',
-    },
-    {
-      AppType: 'Eear & Eye Checkup',
-      DctName: 'John',
-      FclDesc: 'Arthopedic',
-      AppDateTime: '2019-08-24',
-    },
-    {
-      AppType: 'Blood Test',
-      DctName: 'Richard',
-      FclDesc: 'Neurologist',
-      AppDateTime: '2019-07-14',
-    },
-  ];
+  public patientAppointmentsList = [];
   public connection = {};
   public path = '';
-  public PatId = '';
+  public PatId = {};
   public created() {
     const str = decodeURIComponent(this.$route.path).substring(1);
     // tslint:disable-next-line:no-console
@@ -131,13 +79,52 @@ export default class Dashboard extends Vue {
     obj.server = server;
     obj.instance = instance;
     obj.database = database;
-    this.PatId = PatId;
+    const patid = {PatId};
+    this.PatId = patid;
     this.connection = obj;
     this.path = this.$route.path;
     // Dispatching actions to set values
     this.$store.dispatch('SET_CONNECTION_ASYNC', this.connection);
     this.$store.dispatch('SET_PATH_ASYNC', this.path);
     this.$store.dispatch('SET_PATID_ASYNC', this.PatId);
+  }
+   public mounted() {
+     console.log('mount called');
+     this.getPatAptList();
+  }
+
+  public getPatAptList() {
+    this.$q.loading.show({
+        message: 'Please wait while loading..',
+      });
+    this.$apollo.query({
+      query: gql`query patientAppointmentsList($connection: ConnectionInput, $PatId: PatIdInput) {
+        patientAppointmentsList(connection: $connection, PatId: $PatId) {
+          RecNo
+          PatId
+          DctId
+          FclId
+          DctName
+          FclDesc
+          Duration
+          AppType
+          AppDateTime
+          EntryDateTime
+        }
+      }`,
+      // Parameters
+      variables: {
+        connection: this.connection,
+        PatId: this.PatId,
+      },
+    }).then((data: any) => {
+        this.patientAppointmentsList = data.data.patientAppointmentsList;
+        this.$q.loading.hide();
+      }).catch((error: any) => {
+          this.$q.loading.hide();
+          // tslint:disable-next-line:no-console
+          console.error('error in get patient appointment list: ', error);
+      });
   }
 }
 </script>

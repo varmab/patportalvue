@@ -286,7 +286,7 @@ export default class ScheduleAppointment extends Vue {
     // tslint:disable-next-line:no-console
     console.log('withT', date.formatDate(appDateT, 'YYYY-MM-DDTHH:mm'));
     const appointment = {
-      PatId: this.$store.state.PatId,
+      PatId: this.$store.state.PatId.PatId,
       PatName: 'XYZ',
       FclId: this.FclId,
       DctId: this.DctId,
