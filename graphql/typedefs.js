@@ -44,6 +44,8 @@ let typeDefs = `
     PatId: ID
     DctId: ID
     FclId: ID
+    DctName: String
+    FclDesc: String
     Duration: Int
     AppType: String
     AppDateTime: String
