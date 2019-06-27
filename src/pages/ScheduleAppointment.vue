@@ -176,7 +176,7 @@ export default class ScheduleAppointment extends Vue {
 
   public getDoctors() {
     this.$q.loading.show({
-        message: 'Please wait while fetching doctors, facilities and appointment types',
+        message: 'Please wait while loading..',
       });
     this.$apollo.query({
         query: gql`query allDoctors ($connection: ConnectionInput) {
@@ -282,15 +282,19 @@ export default class ScheduleAppointment extends Vue {
   }
 
   public createAppointment(time: any) {
+    const appDateT = this.date + ' ' + time.time;
     // tslint:disable-next-line:no-console
+    console.log('withT', date.formatDate(appDateT, 'YYYY-MM-DDTHH:mm'));
     const appointment = {
       PatId: this.$store.state.PatId,
       PatName: 'XYZ',
       FclId: this.FclId,
       DctId: this.DctId,
+      DctName: this.DctName,
+      FclDesc: this.FclDesc,
       Duration: 60,
       AppType: this.Type,
-      AppDateTime: this.date,
+      AppDateTime: appDateT,
     };
     const connectionDetails = this.$store.state.connectionString;
     // tslint:disable-next-line:no-console
@@ -302,6 +306,8 @@ export default class ScheduleAppointment extends Vue {
           RecNo
           PatId
           DctId
+          DctName
+          FclDesc
           FclId
           Duration
           AppType
