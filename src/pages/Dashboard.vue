@@ -36,7 +36,15 @@ export default class Dashboard extends Vue {
       align: 'left',
       label: 'Date',
       field: 'AppDateTime',
-      format: (val: any) => `${val}`,
+      // format: (val: any) => `${val}`,
+      format: (val: any) => {
+        // tslint:disable-next-line:no-console
+        console.log('date', val);
+        // tslint:disable-next-line:radix
+        const value = date.formatDate(parseInt(val), 'YYYY-MM-DD HH:mm');
+        // tslint:disable-next-line:no-unused-expression
+        return value;
+        },
       sortable: true,
     },
     { name: 'Doctor',
