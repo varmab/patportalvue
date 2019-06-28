@@ -30,21 +30,19 @@ import { Component, Mixins, Vue } from 'vue-property-decorator';
   },
 })
 export default class Dashboard extends Vue {
+  public dateTime = '';
   public columns = [
     {
       name: 'Date',
       align: 'left',
       label: 'Date',
-      field: 'AppDate',
-      // format: (val: any) => `${val}`,
-      format: (val: any) => {
-        // tslint:disable-next-line:no-console
-        console.log('date', val);
+      field: (row: any) => {
         // tslint:disable-next-line:radix
-        const value = date.formatDate(parseInt(val), 'DD-MM-YYYY');
-        // tslint:disable-next-line:no-unused-expression
-        return value;
-        },
+        const value = date.formatDate(parseInt(row.AppDate), 'DD-MM-YYYY');
+        this.dateTime = value + ' ' + row.AppTime;
+        return this.dateTime;
+      },
+      format: (val: any) => `${val}`,
       sortable: true,
     },
     { name: 'Doctor',
