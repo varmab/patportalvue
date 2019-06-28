@@ -227,8 +227,8 @@ export default class ScheduleAppointment extends Vue {
 
   public getDoctors() {
     this.$q.loading.show({
-        message: 'Please wait while loading..',
-      });
+      message: 'Please wait while loading..',
+    });
     this.$apollo.query({
         query: gql`query allDoctors ($connection: ConnectionInput) {
           allDoctors(connection: $connection) {
@@ -344,6 +344,9 @@ export default class ScheduleAppointment extends Vue {
   }
 
   public createAppointment(time: any) {
+    this.$q.loading.show({
+      message: 'Creating appointment please wait!',
+    });
     const appointment = {
       PatId: this.$store.state.PatId.PatId,
       PatName: 'XYZ',
@@ -382,8 +385,9 @@ export default class ScheduleAppointment extends Vue {
         connection: connectionDetails,
       },
     }).then((data: any) => {
+      // this.$q.loading.hide();
       // tslint:disable-next-line:no-console
-      console.log('data', data);
+      console.log('appointment created sussessfully', data);
       this.$q.notify({
         color: 'green-4',
         textColor: 'white',
@@ -393,6 +397,7 @@ export default class ScheduleAppointment extends Vue {
       this.onReset();
       this.$router.push(`${this.path}`);
     }).catch((error: any) => {
+      this.$q.loading.hide();
       // tslint:disable-next-line:no-console
       console.error('error in api call: ', error);
     });
