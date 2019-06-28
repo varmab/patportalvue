@@ -312,45 +312,38 @@ export default class ScheduleAppointment extends Vue {
     this.Type = type.Type;
   }
   public onSubmit() {
-    // tslint:disable-next-line:no-console
-    console.log('times', this.times);
-      if (this.DctName === 'Select Doctor') {
-        this.doctorErr = true;
-        this.showTimes = false;
-      } else if (this.FclDesc === 'Select Facility') {
-        this.facilityErr = true;
-        this.showTimes = false;
-      } else if (this.Type === 'Select Appointment Type') {
-        this.typeErr = true;
-        this.showTimes = false;
-      } else {
-        this.aptList.map((apt: any, key: any) => {
-          // tslint:disable-next-line:radix
-          const aptDate = date.formatDate(parseInt(apt.AppDate), 'YYYY-MM-DD');
-          const Date = date.formatDate(this.date, 'YYYY-MM-DD');
-          if (Date === aptDate) {
-            // Removing the already booked time from the times
-            const index = this.times.findIndex(slot => slot.time === apt.AppTime);
-            this.times.splice(index, 1);
-          }
-        });
-        this.showTimes = true;
-        this.$q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          icon: 'fas fa-check-circle',
-          message: 'Please select time to request an appointment',
-        });
-      }
+    if (this.DctName === 'Select Doctor') {
+      this.doctorErr = true;
+      this.showTimes = false;
+    } else if (this.FclDesc === 'Select Facility') {
+      this.facilityErr = true;
+      this.showTimes = false;
+    } else if (this.Type === 'Select Appointment Type') {
+      this.typeErr = true;
+      this.showTimes = false;
+    } else {
+      this.aptList.map((apt: any, key: any) => {
+        // tslint:disable-next-line:radix
+        const aptDate = date.formatDate(parseInt(apt.AppDate), 'YYYY-MM-DD');
+        const selectedDate = date.formatDate(this.date, 'YYYY-MM-DD');
+        // Checking the selected date with patient appointments dates
+        if (selectedDate === aptDate) {
+          // Removing the already booked slot time from the times based on selectedDate
+          const index = this.times.findIndex(slot => slot.time === apt.AppTime);
+          this.times.splice(index, 1);
+        }
+      });
+      this.showTimes = true;
+      this.$q.notify({
+        color: 'green-4',
+        textColor: 'white',
+        icon: 'fas fa-check-circle',
+        message: 'Please select time to request an appointment',
+      });
+    }
   }
 
   public createAppointment(time: any) {
-    // tslint:disable-next-line:no-console
-    console.log('date', date.formatDate(this.date, 'YYYY-MM-DD'));
-    // // tslint:disable-next-line:radix
-    // const Time = parseInt(time.time);
-    // // tslint:disable-next-line:no-console
-    // console.log('time', date.formatDate(Time, 'HH:mm'));
     const appointment = {
       PatId: this.$store.state.PatId.PatId,
       PatName: 'XYZ',
@@ -365,44 +358,44 @@ export default class ScheduleAppointment extends Vue {
     };
     const connectionDetails = this.$store.state.connectionString;
     // tslint:disable-next-line:no-console
-    console.log('aptobj', appointment);
-    // this.$apollo.mutate({
-    //   // Query
-    //   mutation: gql`mutation ($connection: ConnectionInput, $appointment: AppointmentInput) {
-    //     createAppointment(connection: $connection, appointment: $appointment) {
-    //       RecNo
-    //       PatId
-    //       DctId
-    //       DctName
-    //       FclDesc
-    //       FclId
-    //       Duration
-    //       AppType
-    //       AppDate
-    //       AppTime
-    //       EntryDateTime
-    //     }
-    //   }`,
-    //   // Parameters
-    //   variables: {
-    //     appointment,
-    //     connection: connectionDetails,
-    //   },
-    // }).then((data: any) => {
-    //   // tslint:disable-next-line:no-console
-    //   console.log('data', data);
-    //   this.$q.notify({
-    //     color: 'green-4',
-    //     textColor: 'white',
-    //     icon: 'fas fa-check-circle',
-    //     message: 'Appointment created successfully!',
-    //   });
-    //   this.onReset();
-    //   this.$router.push(`${this.path}`);
-    // }).catch((error: any) => {
-    //   // tslint:disable-next-line:no-console
-    //   console.error('error in api call: ', error);
-    // });
+    console.log('create appointment object: ', appointment);
+    this.$apollo.mutate({
+      // Query
+      mutation: gql`mutation ($connection: ConnectionInput, $appointment: AppointmentInput) {
+        createAppointment(connection: $connection, appointment: $appointment) {
+          RecNo
+          PatId
+          DctId
+          DctName
+          FclDesc
+          FclId
+          Duration
+          AppType
+          AppDate
+          AppTime
+          EntryDateTime
+        }
+      }`,
+      // Parameters
+      variables: {
+        appointment,
+        connection: connectionDetails,
+      },
+    }).then((data: any) => {
+      // tslint:disable-next-line:no-console
+      console.log('data', data);
+      this.$q.notify({
+        color: 'green-4',
+        textColor: 'white',
+        icon: 'fas fa-check-circle',
+        message: 'Appointment created successfully!',
+      });
+      this.onReset();
+      this.$router.push(`${this.path}`);
+    }).catch((error: any) => {
+      // tslint:disable-next-line:no-console
+      console.error('error in api call: ', error);
+    });
   }
 
   public onReset() {
