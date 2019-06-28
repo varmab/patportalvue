@@ -41,7 +41,7 @@ export default class Dashboard extends Vue {
         // tslint:disable-next-line:no-console
         console.log('date', val);
         // tslint:disable-next-line:radix
-        const value = date.formatDate(parseInt(val), 'YYYY-MM-DD HH:mm');
+        const value = date.formatDate(parseInt(val), 'DD-MM-YYYY HH:mm');
         // tslint:disable-next-line:no-unused-expression
         return value;
         },
