@@ -123,43 +123,43 @@ export default class ScheduleAppointment extends Vue {
   public allAppointmentTypes = [];
   public times = [
     {
-      time: '07:30 am',
+      time: '07:30 AM',
     },
     {
-      time: '08:30 am',
+      time: '08:30 AM',
     },
     {
-      time: '09:30 am',
+      time: '09:30 AM',
     },
     {
-      time: '10:30 am',
+      time: '10:30 AM',
     },
     {
-      time: '11:30 am',
+      time: '11:30 AM',
     },
     {
-      time: '12:30 pm',
+      time: '12:30 PM',
     },
     {
-      time: '01:30 pm',
+      time: '01:30 PM',
     },
     {
-      time: '02:30 pm',
+      time: '02:30 PM',
     },
     {
-      time: '03:30 pm',
+      time: '03:30 PM',
     },
     {
-      time: '04:30 pm',
+      time: '04:30 PM',
     },
     {
-      time: '05:30 pm',
+      time: '05:30 PM',
     },
     {
-      time: '06:30 pm',
+      time: '06:30 PM',
     },
     {
-      time: '07:30 pm',
+      time: '07:30 PM',
     },
   ];
 
@@ -282,9 +282,12 @@ export default class ScheduleAppointment extends Vue {
   }
 
   public createAppointment(time: any) {
-    const appDateT = this.date + ' ' + time.time;
     // tslint:disable-next-line:no-console
-    console.log('withT', date.formatDate(appDateT, 'YYYY-MM-DDTHH:mm'));
+    console.log('date', date.formatDate(this.date, 'YYYY-MM-DD'));
+    // // tslint:disable-next-line:radix
+    // const Time = parseInt(time.time);
+    // // tslint:disable-next-line:no-console
+    // console.log('time', date.formatDate(Time, 'HH:mm'));
     const appointment = {
       PatId: this.$store.state.PatId.PatId,
       PatName: 'XYZ',
@@ -294,7 +297,8 @@ export default class ScheduleAppointment extends Vue {
       FclDesc: this.FclDesc,
       Duration: 60,
       AppType: this.Type,
-      AppDateTime: appDateT,
+      AppDate: this.date,
+      AppTime: time.time,
     };
     const connectionDetails = this.$store.state.connectionString;
     // tslint:disable-next-line:no-console
@@ -311,7 +315,8 @@ export default class ScheduleAppointment extends Vue {
           FclId
           Duration
           AppType
-          AppDateTime
+          AppDate
+          AppTime
           EntryDateTime
         }
       }`,

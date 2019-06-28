@@ -35,13 +35,13 @@ export default class Dashboard extends Vue {
       name: 'Date',
       align: 'left',
       label: 'Date',
-      field: 'AppDateTime',
+      field: 'AppDate',
       // format: (val: any) => `${val}`,
       format: (val: any) => {
         // tslint:disable-next-line:no-console
         console.log('date', val);
         // tslint:disable-next-line:radix
-        const value = date.formatDate(parseInt(val), 'DD-MM-YYYY HH:mm');
+        const value = date.formatDate(parseInt(val), 'DD-MM-YYYY');
         // tslint:disable-next-line:no-unused-expression
         return value;
         },
@@ -116,7 +116,8 @@ export default class Dashboard extends Vue {
           FclDesc
           Duration
           AppType
-          AppDateTime
+          AppDate
+          AppTime
           EntryDateTime
         }
       }`,

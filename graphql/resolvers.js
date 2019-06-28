@@ -107,7 +107,7 @@ const resolvers = {
           console.log('patientAppointmentsList', config, PatId)
           await sql.close();
           await sql.connect(config);
-          let result = await sql.query(`SELECT RecNo,PatId,DctId,FclId,DctName,FclDesc,Duration,AppType,AppDateTime,EntryDateTime FROM calmed.dbo.xrxAppSch`)
+          let result = await sql.query(`SELECT RecNo,PatId,DctId,FclId,DctName,FclDesc,Duration,AppType,AppDate,AppTime,EntryDateTime FROM calmed.dbo.xrxAppSch`)
           await sql.close();
           resolve(result.recordset)
         } catch (err) {
@@ -132,7 +132,7 @@ const resolvers = {
           await sql.close();
           await sql.connect(config);
           var recNo = generateUUID();
-          await sql.query(`INSERT INTO calmed.dbo.xrxAppSch(RecNo,PatId,PatName,DctId,DctName,FclDesc,FclId,AppType,Duration,AppDateTime) VALUES('${recNo}','${appointment.PatId}','${appointment.PatName}','${appointment.DctId}','${appointment.DctName}','${appointment.FclDesc}','${appointment.FclId}','${appointment.AppType}','${appointment.Duration}','${appointment.AppDateTime}')`)
+          await sql.query(`INSERT INTO calmed.dbo.xrxAppSch(RecNo,PatId,PatName,DctId,DctName,FclDesc,FclId,AppType,Duration,AppDate,AppTime) VALUES('${recNo}','${appointment.PatId}','${appointment.PatName}','${appointment.DctId}','${appointment.DctName}','${appointment.FclDesc}','${appointment.FclId}','${appointment.AppType}','${appointment.Duration}','${appointment.AppDate}','${appointment.AppTime}')`)
           let result = await sql.query(`SELECT * FROM calmed.dbo.xrxAppSch WHERE RecNo='${recNo}'`)
           console.log(JSON.stringify(result.recordset))
           await sql.close();
