@@ -95,7 +95,8 @@
 <script lang="ts">
 import gql from 'graphql-tag';
 import { date } from 'quasar';
-import { Component, Mixins, Vue } from 'vue-property-decorator';
+import { Key } from 'readline';
+import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
 
 @Component({
   meta() {
@@ -105,6 +106,7 @@ import { Component, Mixins, Vue } from 'vue-property-decorator';
   },
 })
 export default class ScheduleAppointment extends Vue {
+  public aptList = [];
   public connection = {};
   public path = '';
   public showTimes = false;
@@ -162,10 +164,59 @@ export default class ScheduleAppointment extends Vue {
       time: '07:30 PM',
     },
   ];
+  public timesCopy = [
+    {
+      time: '07:30 AM',
+    },
+    {
+      time: '08:30 AM',
+    },
+    {
+      time: '09:30 AM',
+    },
+    {
+      time: '10:30 AM',
+    },
+    {
+      time: '11:30 AM',
+    },
+    {
+      time: '12:30 PM',
+    },
+    {
+      time: '01:30 PM',
+    },
+    {
+      time: '02:30 PM',
+    },
+    {
+      time: '03:30 PM',
+    },
+    {
+      time: '04:30 PM',
+    },
+    {
+      time: '05:30 PM',
+    },
+    {
+      time: '06:30 PM',
+    },
+    {
+      time: '07:30 PM',
+    },
+  ];
+
+  @Watch('date')
+  public onChildChanged(val: any, oldVal: any) {
+    this.showTimes = false;
+    // Replacing the times with actual times
+    this.times.splice(0, this.times.length, ...this.timesCopy);
+  }
 
   public created() {
     const connection = this.$store.state.connectionString;
     const path = this.$store.state.path;
+    this.aptList = this.$store.state.AptList;
     this.connection = connection;
     this.path = path;
   }
@@ -261,6 +312,8 @@ export default class ScheduleAppointment extends Vue {
     this.Type = type.Type;
   }
   public onSubmit() {
+    // tslint:disable-next-line:no-console
+    console.log('times', this.times);
       if (this.DctName === 'Select Doctor') {
         this.doctorErr = true;
         this.showTimes = false;
@@ -271,6 +324,16 @@ export default class ScheduleAppointment extends Vue {
         this.typeErr = true;
         this.showTimes = false;
       } else {
+        this.aptList.map((apt: any, key: any) => {
+          // tslint:disable-next-line:radix
+          const aptDate = date.formatDate(parseInt(apt.AppDate), 'YYYY-MM-DD');
+          const Date = date.formatDate(this.date, 'YYYY-MM-DD');
+          if (Date === aptDate) {
+            // Removing the already booked time from the times
+            const index = this.times.findIndex(slot => slot.time === apt.AppTime);
+            this.times.splice(index, 1);
+          }
+        });
         this.showTimes = true;
         this.$q.notify({
           color: 'green-4',
@@ -303,43 +366,43 @@ export default class ScheduleAppointment extends Vue {
     const connectionDetails = this.$store.state.connectionString;
     // tslint:disable-next-line:no-console
     console.log('aptobj', appointment);
-    this.$apollo.mutate({
-      // Query
-      mutation: gql`mutation ($connection: ConnectionInput, $appointment: AppointmentInput) {
-        createAppointment(connection: $connection, appointment: $appointment) {
-          RecNo
-          PatId
-          DctId
-          DctName
-          FclDesc
-          FclId
-          Duration
-          AppType
-          AppDate
-          AppTime
-          EntryDateTime
-        }
-      }`,
-      // Parameters
-      variables: {
-        appointment,
-        connection: connectionDetails,
-      },
-    }).then((data: any) => {
-      // tslint:disable-next-line:no-console
-      console.log('data', data);
-      this.$q.notify({
-        color: 'green-4',
-        textColor: 'white',
-        icon: 'fas fa-check-circle',
-        message: 'Appointment created successfully!',
-      });
-      this.onReset();
-      this.$router.push(`${this.path}`);
-    }).catch((error: any) => {
-      // tslint:disable-next-line:no-console
-      console.error('error in api call: ', error);
-    });
+    // this.$apollo.mutate({
+    //   // Query
+    //   mutation: gql`mutation ($connection: ConnectionInput, $appointment: AppointmentInput) {
+    //     createAppointment(connection: $connection, appointment: $appointment) {
+    //       RecNo
+    //       PatId
+    //       DctId
+    //       DctName
+    //       FclDesc
+    //       FclId
+    //       Duration
+    //       AppType
+    //       AppDate
+    //       AppTime
+    //       EntryDateTime
+    //     }
+    //   }`,
+    //   // Parameters
+    //   variables: {
+    //     appointment,
+    //     connection: connectionDetails,
+    //   },
+    // }).then((data: any) => {
+    //   // tslint:disable-next-line:no-console
+    //   console.log('data', data);
+    //   this.$q.notify({
+    //     color: 'green-4',
+    //     textColor: 'white',
+    //     icon: 'fas fa-check-circle',
+    //     message: 'Appointment created successfully!',
+    //   });
+    //   this.onReset();
+    //   this.$router.push(`${this.path}`);
+    // }).catch((error: any) => {
+    //   // tslint:disable-next-line:no-console
+    //   console.error('error in api call: ', error);
+    // });
   }
 
   public onReset() {

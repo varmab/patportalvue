@@ -21,6 +21,7 @@
 import gql from 'graphql-tag';
 import { date } from 'quasar';
 import { Component, Mixins, Vue } from 'vue-property-decorator';
+import { Key } from 'readline';
 
 @Component({
   meta() {
@@ -126,6 +127,7 @@ export default class Dashboard extends Vue {
       },
     }).then((data: any) => {
         this.patientAppointmentsList = data.data.patientAppointmentsList;
+        this.$store.dispatch('SET_APT_LIST_ASYNC', this.patientAppointmentsList);
         this.$q.loading.hide();
       }).catch((error: any) => {
           this.$q.loading.hide();

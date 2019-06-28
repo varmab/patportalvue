@@ -10,6 +10,7 @@ export default new Vuex.Store({
     connectionString: {},
     path: '',
     PatId: '',
+    AptList: [],
   },
   mutations: {
     SET_CONNECTION_STRING(state, connection) {
@@ -21,6 +22,9 @@ export default new Vuex.Store({
     SET_PATID(state, PatId) {
       state.PatId = PatId;
     },
+    SET_APT_LIST(state, list) {
+      state.AptList = list;
+    },
   },
   actions: {
     SET_CONNECTION_ASYNC(context, connection) {
@@ -31,6 +35,9 @@ export default new Vuex.Store({
     },
     SET_PATID_ASYNC(context, PatId) {
       context.commit('SET_PATID', PatId);
+    },
+    SET_APT_LIST_ASYNC(context, List) {
+      context.commit('SET_APT_LIST', List);
     },
   },
 });
