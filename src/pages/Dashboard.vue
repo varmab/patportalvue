@@ -21,7 +21,6 @@
 import gql from 'graphql-tag';
 import { date } from 'quasar';
 import { Component, Mixins, Vue } from 'vue-property-decorator';
-import { Key } from 'readline';
 
 @Component({
   meta() {

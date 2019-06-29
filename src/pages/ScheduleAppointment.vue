@@ -76,7 +76,8 @@
 
                 </div>
               </div>
-              <div v-if="showTimes" class="col-xs-12 col-sm-8 col-md-6">
+              <div v-if="showTimes" class="margin-auto col-xs-12 col-sm-8 col-md-6">
+                <div class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>Available slots</div>
                 <div class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>
                   <q-btn v-for="slot in times" :key="slot+1" color="primary" :label="slot.time" @click="createAppointment(slot)" />
                 </div>
@@ -338,14 +339,14 @@ export default class ScheduleAppointment extends Vue {
         color: 'green-4',
         textColor: 'white',
         icon: 'fas fa-check-circle',
-        message: 'Please select time to request an appointment',
+        message: 'Select available slots to request an appointment',
       });
     }
   }
 
   public createAppointment(time: any) {
     this.$q.loading.show({
-      message: 'Creating appointment please wait!',
+      message: 'Creating appointment your appointment',
     });
     const appointment = {
       PatId: this.$store.state.PatId.PatId,
