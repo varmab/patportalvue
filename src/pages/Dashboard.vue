@@ -38,8 +38,8 @@ export default class Dashboard extends Vue {
       label: 'Date',
       field: (row: any) => {
         // tslint:disable-next-line:radix
-        const value = date.formatDate(parseInt(row.AppDate), 'DD-MM-YYYY');
-        this.dateTime = value + ' ' + row.AppTime;
+        const value = date.formatDate(parseInt(row.AppDate), 'MMM DD YYYY');
+        this.dateTime = value + ', ' + row.AppTime;
         return this.dateTime;
       },
       format: (val: any) => `${val}`,

@@ -78,9 +78,10 @@
               </div>
               <div v-if="showTimes" class="margin-auto col-xs-12 col-sm-8 col-md-6">
                 <div class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>Available slots</div>
-                <div class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>
-                  <q-btn v-for="slot in times" :key="slot+1" color="primary" :label="slot.time" @click="createAppointment(slot)" />
-                </div>
+                <span v-for="slot in times" :key="slot+1" class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>
+                  <q-btn v-if="slots.findIndex(booked => booked.time === slot.time) > -1" color="green" :label="slot.time" @click="createAppointment(slot)" disable/>
+                  <q-btn v-else color="green" :label="slot.time" @click="createAppointment(slot)"/>
+                </span>
               </div>
             </div>
           </div>
@@ -107,6 +108,7 @@ import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
   },
 })
 export default class ScheduleAppointment extends Vue {
+  public slots: any = [];
   public aptList = [];
   public connection = {};
   public path = '';
@@ -165,53 +167,11 @@ export default class ScheduleAppointment extends Vue {
       time: '07:30 PM',
     },
   ];
-  public timesCopy = [
-    {
-      time: '07:30 AM',
-    },
-    {
-      time: '08:30 AM',
-    },
-    {
-      time: '09:30 AM',
-    },
-    {
-      time: '10:30 AM',
-    },
-    {
-      time: '11:30 AM',
-    },
-    {
-      time: '12:30 PM',
-    },
-    {
-      time: '01:30 PM',
-    },
-    {
-      time: '02:30 PM',
-    },
-    {
-      time: '03:30 PM',
-    },
-    {
-      time: '04:30 PM',
-    },
-    {
-      time: '05:30 PM',
-    },
-    {
-      time: '06:30 PM',
-    },
-    {
-      time: '07:30 PM',
-    },
-  ];
 
   @Watch('date')
   public onChildChanged(val: any, oldVal: any) {
     this.showTimes = false;
-    // Replacing the times with actual times
-    this.times.splice(0, this.times.length, ...this.timesCopy);
+    this.slots.length = 0;
   }
 
   public created() {
@@ -249,6 +209,7 @@ export default class ScheduleAppointment extends Vue {
           console.error('error in get all doctors: ', error);
       });
   }
+
   public getFacilities() {
     this.$apollo.query({
       query: gql`query allFacilities ($connection: ConnectionInput) {
@@ -269,6 +230,7 @@ export default class ScheduleAppointment extends Vue {
       console.error('error in get all facilities: ', error);
     });
   }
+
   public getAppointmentTypes() {
     this.$apollo.query({
       query: gql`query allAppointmentTypes ($connection: ConnectionInput) {
@@ -297,6 +259,7 @@ export default class ScheduleAppointment extends Vue {
     this.DctId = doctor.DctId;
     this.DctName = doctor.DctName;
   }
+
   public selectFacility(facility: any) {
     // tslint:disable-next-line:no-console
     console.log('selected facility', facility);
@@ -312,6 +275,7 @@ export default class ScheduleAppointment extends Vue {
     this.RecNo = type.RecNo;
     this.Type = type.Type;
   }
+
   public onSubmit() {
     if (this.DctName === 'Select Doctor') {
       this.doctorErr = true;
@@ -324,14 +288,14 @@ export default class ScheduleAppointment extends Vue {
       this.showTimes = false;
     } else {
       this.aptList.map((apt: any, key: any) => {
+        const bookedSlot: any = {};
         // tslint:disable-next-line:radix
         const aptDate = date.formatDate(parseInt(apt.AppDate), 'YYYY-MM-DD');
         const selectedDate = date.formatDate(this.date, 'YYYY-MM-DD');
         // Checking the selected date with patient appointments dates
         if (selectedDate === aptDate) {
-          // Removing the already booked slot time from the times based on selectedDate
-          const index = this.times.findIndex(slot => slot.time === apt.AppTime);
-          this.times.splice(index, 1);
+          bookedSlot.time = apt.AppTime;
+          this.slots.push(bookedSlot);
         }
       });
       this.showTimes = true;
