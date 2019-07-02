@@ -18,7 +18,8 @@ var getConfig = (connection) => {
       password: connection.password,
       server: connection.server,
       options: {
-        instance: connection.instance,
+        encrypt:true,
+        // instance: connection.instance,
         database: connection.database
       }
     }
@@ -45,8 +46,9 @@ const resolvers = {
           var config = getConfig(connection)
           console.log('allDoctors', config)
           await sql.close();
-          await sql.connect(config);
-          let result = await sql.query('select DctId, DctName from calmed.dbo.xrxDct')
+          var conn=`Server=${config.server},1433;Database=${config.options.database};User Id=${config.user};Password=${config.password};Encrypt=true`
+          await sql.connect(conn);
+          let result = await sql.query('select DctId, DctName from xerex_dowood.dbo.xrxDct')
           await sql.close();
           resolve(result.recordset)
         } catch (err) {
@@ -65,8 +67,9 @@ const resolvers = {
           var config = getConfig(connection)
           console.log('allFacilities', config)
           await sql.close();
-          await sql.connect(config);
-          let result = await sql.query('select FclId, FclDesc from calmed.dbo.xrxFcl')
+          var conn=`Server=${config.server},1433;Database=${config.options.database};User Id=${config.user};Password=${config.password};Encrypt=true`
+          await sql.connect(conn);
+          let result = await sql.query('select FclId, FclDesc from xerex_dowood.dbo.xrxFcl')
           await sql.close();
           resolve(result.recordset)
         } catch (err) {
@@ -85,8 +88,9 @@ const resolvers = {
           var config = getConfig(connection)
           console.log('allAppointmentTypes', config)
           await sql.close();
-          await sql.connect(config);
-          let result = await sql.query('select RecNo, [Type] from calmed.dbo.xrxAppType')
+          var conn=`Server=${config.server},1433;Database=${config.options.database};User Id=${config.user};Password=${config.password};Encrypt=true`
+          await sql.connect(conn);
+          let result = await sql.query('select RecNo, [Type] from xerex_dowood.dbo.xrxAppType')
           await sql.close();
           resolve(result.recordset)
         } catch (err) {
@@ -106,8 +110,9 @@ const resolvers = {
           var config = getConfig(connection)
           console.log('patientAppointmentsList', config, PatId)
           await sql.close();
-          await sql.connect(config);
-          let result = await sql.query(`SELECT RecNo,PatId,DctId,FclId,DctName,FclDesc,Duration,AppType,AppDate,AppTime,EntryDateTime FROM calmed.dbo.xrxAppSch`)
+          var conn=`Server=${config.server},1433;Database=${config.options.database};User Id=${config.user};Password=${config.password};Encrypt=true`
+          await sql.connect(conn);
+          let result = await sql.query(`SELECT RecNo,PatId,DctId,FclId,DctName,FclDesc,Duration,AppType,AppDate,AppTime,EntryDateTime FROM xerex_dowood.dbo.xrxAppSch`)
           await sql.close();
           resolve(result.recordset)
         } catch (err) {
@@ -130,10 +135,11 @@ const resolvers = {
           var config = getConfig(connection)
           console.log('createAppointment', config, appointment)
           await sql.close();
-          await sql.connect(config);
+          var conn=`Server=${config.server},1433;Database=${config.options.database};User Id=${config.user};Password=${config.password};Encrypt=true`
+          await sql.connect(conn);
           var recNo = generateUUID();
-          await sql.query(`INSERT INTO calmed.dbo.xrxAppSch(RecNo,PatId,PatName,DctId,DctName,FclDesc,FclId,AppType,Duration,AppDate,AppTime) VALUES('${recNo}','${appointment.PatId}','${appointment.PatName}','${appointment.DctId}','${appointment.DctName}','${appointment.FclDesc}','${appointment.FclId}','${appointment.AppType}','${appointment.Duration}','${appointment.AppDate}','${appointment.AppTime}')`)
-          let result = await sql.query(`SELECT * FROM calmed.dbo.xrxAppSch WHERE RecNo='${recNo}'`)
+          await sql.query(`INSERT INTO xerex_dowood.dbo.xrxAppSch(RecNo,PatId,PatName,DctId,DctName,FclDesc,FclId,AppType,Duration,AppDate,AppTime) VALUES('${recNo}','${appointment.PatId}','${appointment.PatName}','${appointment.DctId}','${appointment.DctName}','${appointment.FclDesc}','${appointment.FclId}','${appointment.AppType}','${appointment.Duration}','${appointment.AppDate}','${appointment.AppTime}')`)
+          let result = await sql.query(`SELECT * FROM xerex_dowood.dbo.xrxAppSch WHERE RecNo='${recNo}'`)
           console.log(JSON.stringify(result.recordset))
           await sql.close();
           resolve(result.recordset[0])
