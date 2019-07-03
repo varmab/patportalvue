@@ -95,7 +95,6 @@ export default class Dashboard extends Vue {
     this.$store.dispatch('SET_PATID_ASYNC', this.PatId);
   }
    public mounted() {
-     console.log('mount called');
      this.getPatAptList();
   }
 
@@ -104,7 +103,7 @@ export default class Dashboard extends Vue {
         message: 'Please wait while loading..',
       });
     this.$apollo.query({
-      query: gql`query patientAppointmentsList($connection: ConnectionInput, $PatId: PatIdInput) {
+      query: gql`query patientAppointmentsList($connection: ConnectionInput, $PatId: ListPatIdInput) {
         patientAppointmentsList(connection: $connection, PatId: $PatId) {
           RecNo
           PatId
@@ -114,8 +113,7 @@ export default class Dashboard extends Vue {
           FclDesc
           Duration
           AppType
-          AppDate
-          AppTime
+          AppDateTime
           EntryDateTime
         }
       }`,
