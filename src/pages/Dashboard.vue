@@ -38,9 +38,8 @@ export default class Dashboard extends Vue {
       label: 'Date',
       field: (row: any) => {
         // tslint:disable-next-line:radix
-        const value = date.formatDate(parseInt(row.AppDate), 'MMM DD YYYY');
-        this.dateTime = value + ', ' + row.AppTime;
-        return this.dateTime;
+        const value = date.formatDate(parseInt(row.AppDateTime), 'MMM DD YYYY, h:mm A');
+        return value;
       },
       format: (val: any) => `${val}`,
       sortable: true,
