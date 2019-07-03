@@ -18,6 +18,6 @@ module.exports = {
 ```
 **4. Install npm packages:** ``` npm i (or) yarn add ```
 
-**_Note:_** As we set ``` "dev": "concurrently \"nodemon server.js\" \"quasar dev\"" ``` in ``` package.json ``` both server and client will run with following command.
+**_Note:_** As we set ``` "dev": ""quasar dev" ``` in ``` package.json ``` we can run our application using following command.
 
 **5. Run the project:** ``` npm run dev ```
