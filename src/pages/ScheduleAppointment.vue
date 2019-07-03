@@ -277,39 +277,37 @@ export default class ScheduleAppointment extends Vue {
   }
 
   public onSubmit() {
+    if (this.DctName === 'Select Doctor') {
+      this.doctorErr = true;
+      this.showTimes = false;
+    } else if (this.FclDesc === 'Select Facility') {
+      this.facilityErr = true;
+      this.showTimes = false;
+    } else if (this.Type === 'Select Appointment Type') {
+      this.typeErr = true;
+      this.showTimes = false;
+    } else {
+      this.aptList.map((apt: any, key: any) => {
+        const bookedSlot: any = {};
+        const selectedDate = date.formatDate(this.date, 'MMM DD YYYY');
+        // tslint:disable-next-line:radix
+        const AptDate = date.formatDate(parseInt(apt.AppDateTime), 'MMM DD YYYY');
+        // tslint:disable-next-line:radix
+        const AptTime = date.formatDate(parseInt(apt.AppDateTime), 'hh:mm A');
+        if (selectedDate === AptDate) {
+          bookedSlot.time = AptTime;
+          this.slots.push(bookedSlot);
+        }
+      });
       this.showTimes = true;
+      this.$q.notify({
+        color: 'green-4',
+        textColor: 'white',
+        icon: 'fas fa-check-circle',
+        message: 'Select available slots to request an appointment',
+      });
     }
-  // public onSubmit() {
-  //   if (this.DctName === 'Select Doctor') {
-  //     this.doctorErr = true;
-  //     this.showTimes = false;
-  //   } else if (this.FclDesc === 'Select Facility') {
-  //     this.facilityErr = true;
-  //     this.showTimes = false;
-  //   } else if (this.Type === 'Select Appointment Type') {
-  //     this.typeErr = true;
-  //     this.showTimes = false;
-  //   } else {
-  //     this.aptList.map((apt: any, key: any) => {
-  //       const bookedSlot: any = {};
-  //       // tslint:disable-next-line:radix
-  //       const aptDate = date.formatDate(parseInt(apt.AppDate), 'YYYY-MM-DD');
-  //       const selectedDate = date.formatDate(this.date, 'YYYY-MM-DD');
-  //       // Checking the selected date with patient appointments dates
-  //       if (selectedDate === aptDate) {
-  //         bookedSlot.time = apt.AppTime;
-  //         this.slots.push(bookedSlot);
-  //       }
-  //     });
-  //     this.showTimes = true;
-  //     this.$q.notify({
-  //       color: 'green-4',
-  //       textColor: 'white',
-  //       icon: 'fas fa-check-circle',
-  //       message: 'Select available slots to request an appointment',
-  //     });
-  //   }
-  // }
+  }
 
   public createAppointment(time: any) {
     this.$q.loading.show({
@@ -317,11 +315,6 @@ export default class ScheduleAppointment extends Vue {
     });
     const selectedDate = date.formatDate(this.date, 'MMM DD YYYY');
     const modifiedDate = this.date + ' ' + time.time;
-    // tslint:disable-next-line:no-console
-    console.log('modified date', modifiedDate);
-    // tslint:disable-next-line:radix
-    // const selectedTime = date.formatDate(parseInt(time.time), 'h:mm');
-    // console.log('selected date and time', selectedDate, selectedTime, time.time);
     const appointment = {
       PatId: this.$store.state.PatId.PatId,
       PatName: 'XYZ',
