@@ -29,7 +29,7 @@ import { Component, Mixins, Vue } from 'vue-property-decorator';
     };
   },
 })
-export default class Dashboard extends Vue {
+export default class AppointmentsList extends Vue {
   public dateTime = '';
   public columns = [
     {
