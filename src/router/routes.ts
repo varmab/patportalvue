@@ -5,8 +5,7 @@ const routes: RouteConfig[] = [
     path: '/',
     component: () => import('layouts/PatPortalLayout.vue'),
     children: [
-      { path: 'list/:connection/:PatId', component: () => import('pages/AppointmentsList.vue') },
-      { path: 'schedule', component: () => import('pages/ScheduleAppointment.vue')},
+      { path: ':connection/:PatId', component: () => import('pages/PatientAptPage.vue') },
     ],
   },
 ];

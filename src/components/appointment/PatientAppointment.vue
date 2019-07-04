@@ -1,10 +1,5 @@
 <template>
-  <div>
-    <div class="q-px-md q-py-sm q-gutter-sm">
-      <q-btn color="primary" class="block" icon="keyboard_backspace" label="Back" no-caps @click="$router.push(`${path}`)"/>
-    </div>
-    <div class="q-pa-md">
-      <q-card class="my-card">
+    <q-card class="my-card">
         <q-card-section>
           <div class="q-table__title">Schedule Appointment</div>
         </q-card-section>
@@ -86,13 +81,8 @@
             </div>
           </div>
         </q-card-section>
-      </q-card>
-    </div>
-  </div>
+    </q-card>
 </template>
-
-<style>
-</style>
 
 <script lang="ts">
 import gql from 'graphql-tag';
@@ -100,14 +90,9 @@ import { date } from 'quasar';
 import { Key } from 'readline';
 import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
 
-@Component({
-  meta() {
-    return {
-      title: 'Schedule Appointment',
-    };
-  },
-})
-export default class ScheduleAppointment extends Vue {
+@Component
+export default class PatientAppointment extends Vue {
+  public PatId = '';
   public slots: any = [];
   public aptList = [];
   public connection = {};
@@ -184,7 +169,38 @@ export default class ScheduleAppointment extends Vue {
 
   public mounted() {
     this.getDoctors();
+    // this.getPatAptList();
   }
+
+  // public getPatAptList() {
+  //   this.$apollo.query({
+  //     query: gql`query patientAppointmentsList($connection: ConnectionInput, $PatId: ListPatIdInput) {
+  //       patientAppointmentsList(connection: $connection, PatId: $PatId) {
+  //         RecNo
+  //         PatId
+  //         DctId
+  //         FclId
+  //         DctName
+  //         FclDesc
+  //         Duration
+  //         AppType
+  //         AppDateTime
+  //         EntryDateTime
+  //       }
+  //     }`,
+  //     // Parameters
+  //     variables: {
+  //       connection: this.connection,
+  //       PatId: this.PatId,
+  //     },
+  //   }).then((data: any) => {
+  //       this.aptList = data.data.aptList;
+  //       this.$store.dispatch('SET_APT_LIST_ASYNC', this.aptList);
+  //     }).catch((error: any) => {
+  //         // tslint:disable-next-line:no-console
+  //         console.error('error in get patient appointment list: ', error);
+  //     });
+  // }
 
   public getDoctors() {
     this.$q.loading.show({
@@ -398,3 +414,4 @@ export default class ScheduleAppointment extends Vue {
 .margin-auto
   margin 0 auto
 </style>
+
