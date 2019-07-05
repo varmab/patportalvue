@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="text-center">
-                  <q-btn flat color="primary" label="Change" @click="showApt = !showApt" />
+                  <q-btn flat color="primary" label="Change" @click="showSchedule(patientAppointment)" />
                 </div>
             </q-banner>
             <!-- <div class="q-pa-sm">
@@ -165,7 +165,7 @@ import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
 export default class PatientAppointment extends Vue {
   public patientAppointment = [];
   public appDateTime = '';
-  public showApt = true;
+  public showApt = false;
   public PatId = {};
   public slots: any = [];
   public aptList = [];
@@ -274,8 +274,13 @@ export default class PatientAppointment extends Vue {
       },
     }).then((data: any) => {
         const patientAppointment = data.data.patientAppointment;
-        this.patientAppointment = patientAppointment.length ? patientAppointment[0] : patientAppointment;
-        this.appDateTime = patientAppointment.length ? patientAppointment[0].AppDateTime : '';
+        if (patientAppointment.length) {
+          this.showApt = true;
+          this.patientAppointment = patientAppointment[0];
+          this.appDateTime = patientAppointment[0].AppDateTime;
+        } else {
+          this.showApt = false;
+        }
         this.getDoctors();
       }).catch((error: any) => {
         this.$q.loading.hide();
@@ -369,6 +374,19 @@ export default class PatientAppointment extends Vue {
     this.typeErr = false;
     this.RecNo = type.RecNo;
     this.Type = type.Type;
+  }
+
+  public showSchedule(appointment: any) {
+    console.log('appointment coming', appointment);
+    this.showApt = !this.showApt;
+    // tslint:disable-next-line:radix
+    this.date = date.formatDate(parseInt(appointment.AppDateTime), 'YYYY/MM/DD');
+    this.DctId = appointment.DctId;
+    this.DctName = appointment.DctName;
+    this.FclId = appointment.FclId;
+    this.FclDesc = appointment.FclDesc;
+    this.Type = appointment.AppType;
+    this.RecNo = appointment.RecNo;
   }
 
   public onSubmit() {
