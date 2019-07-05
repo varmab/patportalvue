@@ -15,19 +15,19 @@
                         <span class="text-weight-light">Apt Date: </span>
                         <span>Aug 02 2019, 09AM - 10AM</span>
                       </div>
-                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 d-flex align-items-center">
                         <span class="text-weight-light">Doctor: </span>
-                        <span>John Doe</span>
+                        <span class="three-dots">AAAAAAAAAAAAAAAAAAAAA,AAAAAAAAAAAAAAA</span>
                       </div>
                     </div>
                     <div class="row text-center">
                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <span class="text-weight-light">Facility: </span>
-                        <span>Orthopedic</span>
+                        <span class="three-dots">DELETED OFFICE</span>
                       </div>
                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <span class="text-weight-light">App Type: </span>
-                        <span>Emergency</span>
+                        <span class="three-dots">DIABETIC</span>
                       </div>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
                     <q-list v-for="doctor in allDoctors" :key="doctor.DctId">
                       <q-item clickable v-close-popup @click="selectDoctor(doctor)">
                         <q-item-section>
-                          <q-item-label>{{doctor.DctName}}</q-item-label>
+                          <q-item-label class="three-dots">{{doctor.DctName}}</q-item-label>
                         </q-item-section>
                       </q-item>
                     </q-list>
@@ -114,7 +114,7 @@
                     <q-list v-for="facility in allFacilities" :key="facility.FclId">
                       <q-item clickable v-close-popup @click="selectFacility(facility)">
                         <q-item-section>
-                          <q-item-label>{{facility.FclDesc}}</q-item-label>
+                          <q-item-label class="three-dots">{{facility.FclDesc}}</q-item-label>
                         </q-item-section>
                       </q-item>
                     </q-list>
@@ -126,7 +126,7 @@
                     <q-list v-for="ftype in allAppointmentTypes" :key="ftype.RecNo">
                       <q-item clickable v-close-popup @click="selectType(ftype)">
                         <q-item-section>
-                          <q-item-label>{{ftype.Type}}</q-item-label>
+                          <q-item-label class="three-dots">{{ftype.Type}}</q-item-label>
                         </q-item-section>
                       </q-item>
                     </q-list>
@@ -163,8 +163,9 @@ import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
 
 @Component
 export default class PatientAppointment extends Vue {
+  public patientAppointment = [];
   public showApt = true;
-  public PatId = '';
+  public PatId = {};
   public slots: any = [];
   public aptList = [];
   public connection = {};
@@ -232,52 +233,53 @@ export default class PatientAppointment extends Vue {
   }
 
   public created() {
-    const connection = this.$store.state.connectionString;
-    const path = this.$store.state.path;
     this.aptList = this.$store.state.AptList;
-    this.connection = connection;
-    this.path = path;
+    this.connection = this.$store.state.connectionString;
+    this.path = this.$store.state.path;
+    this.PatId = this.$store.state.PatId;
   }
 
   public mounted() {
-    this.getDoctors();
-    // this.getPatAptList();
+    this.getPatApt();
   }
 
-  // public getPatAptList() {
-  //   this.$apollo.query({
-  //     query: gql`query patientAppointmentsList($connection: ConnectionInput, $PatId: ListPatIdInput) {
-  //       patientAppointmentsList(connection: $connection, PatId: $PatId) {
-  //         RecNo
-  //         PatId
-  //         DctId
-  //         FclId
-  //         DctName
-  //         FclDesc
-  //         Duration
-  //         AppType
-  //         AppDateTime
-  //         EntryDateTime
-  //       }
-  //     }`,
-  //     // Parameters
-  //     variables: {
-  //       connection: this.connection,
-  //       PatId: this.PatId,
-  //     },
-  //   }).then((data: any) => {
-  //       this.aptList = data.data.aptList;
-  //       this.$store.dispatch('SET_APT_LIST_ASYNC', this.aptList);
-  //     }).catch((error: any) => {
-  //         // tslint:disable-next-line:no-console
-  //         console.error('error in get patient appointment list: ', error);
-  //     });
-  // }
-
-  public getDoctors() {
+  public getPatApt() {
     this.$q.loading.show({
       message: 'Please wait while loading..',
     });
+    this.$apollo.query({
+      query: gql`query patientAppointment($connection: ConnectionInput, $PatId: ListPatIdInput) {
+        patientAppointment(connection: $connection, PatId: $PatId) {
+          RecNo
+          PatId
+          DctId
+          FclId
+          DctName
+          FclDesc
+          Duration
+          AppType
+          AppDateTime
+          EntryDateTime
+        }
+      }`,
+      // Parameters
+      variables: {
+        connection: this.connection,
+        PatId: this.PatId,
+      },
+    }).then((data: any) => {
+        this.patientAppointment = data.data.patientAppointment;
+        this.getDoctors();
+        console.log('pat apt', this.patientAppointment);
+        // this.$store.dispatch('SET_APT_LIST_ASYNC', this.aptList);
+      }).catch((error: any) => {
+        this.$q.loading.hide();
+        // tslint:disable-next-line:no-console
+        console.error('error in get patient appointment list: ', error);
+      });
+  }
+
+  public getDoctors() {
     this.$apollo.query({
         query: gql`query allDoctors ($connection: ConnectionInput) {
           allDoctors(connection: $connection) {
@@ -484,5 +486,11 @@ export default class PatientAppointment extends Vue {
   width 100%
 .margin-auto
   margin 0 auto
+.three-dots
+  display: inline-block;
+  width: 180px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
 </style>
 

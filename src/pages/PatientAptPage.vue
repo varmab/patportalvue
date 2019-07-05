@@ -23,7 +23,7 @@ import PatientAppointment from '../components/appointment/PatientAppointment.vue
 export default class PatientAptPage extends Vue {
   public connection = {};
   public path = '';
-  public PatId = '';
+  public PatId = {};
   public created() {
     const str = decodeURIComponent(this.$route.path).substring(1);
     // tslint:disable-next-line:no-console
@@ -49,7 +49,8 @@ export default class PatientAptPage extends Vue {
     obj.server = server;
     obj.instance = instance;
     obj.database = database;
-    this.PatId = PatId;
+    const patid = {PatId};
+    this.PatId = patid;
     this.connection = obj;
     this.path = this.$route.path;
     // Dispatching actions to set values

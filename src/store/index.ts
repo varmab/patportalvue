@@ -11,6 +11,7 @@ export default new Vuex.Store({
     path: '',
     PatId: '',
     AptList: [],
+    PatientApt: [],
   },
   mutations: {
     SET_CONNECTION_STRING(state, connection) {
