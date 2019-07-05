@@ -13,21 +13,21 @@
                     <div class="row text-center">
                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <span class="text-weight-light">Apt Date: </span>
-                        <span>Aug 02 2019, 09AM - 10AM</span>
+                        <span>{{aptDate}}</span>
                       </div>
                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 d-flex align-items-center">
                         <span class="text-weight-light">Doctor: </span>
-                        <span class="three-dots">AAAAAAAAAAAAAAAAAAAAA,AAAAAAAAAAAAAAA</span>
+                        <span class="three-dots">{{patientAppointment.DctName}}</span>
                       </div>
                     </div>
                     <div class="row text-center">
                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <span class="text-weight-light">Facility: </span>
-                        <span class="three-dots">DELETED OFFICE</span>
+                        <span class="three-dots">{{patientAppointment.FclDesc}}</span>
                       </div>
                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <span class="text-weight-light">App Type: </span>
-                        <span class="three-dots">DIABETIC</span>
+                        <span class="three-dots">{{patientAppointment.AppType}}</span>
                       </div>
                     </div>
                 </div>
@@ -164,6 +164,7 @@ import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
 @Component
 export default class PatientAppointment extends Vue {
   public patientAppointment = [];
+  public appDateTime = '';
   public showApt = true;
   public PatId = {};
   public slots: any = [];
@@ -226,6 +227,11 @@ export default class PatientAppointment extends Vue {
     },
   ];
 
+  get aptDate() {
+    // tslint:disable-next-line:radix
+    return date.formatDate(parseInt(this.appDateTime), 'MMM DD YYYY, h:mm A');
+  }
+
   @Watch('date')
   public onChildChanged(val: any, oldVal: any) {
     this.showTimes = false;
@@ -233,7 +239,6 @@ export default class PatientAppointment extends Vue {
   }
 
   public created() {
-    this.aptList = this.$store.state.AptList;
     this.connection = this.$store.state.connectionString;
     this.path = this.$store.state.path;
     this.PatId = this.$store.state.PatId;
@@ -268,10 +273,10 @@ export default class PatientAppointment extends Vue {
         PatId: this.PatId,
       },
     }).then((data: any) => {
-        this.patientAppointment = data.data.patientAppointment;
+        const patientAppointment = data.data.patientAppointment;
+        this.patientAppointment = patientAppointment.length ? patientAppointment[0] : patientAppointment;
+        this.appDateTime = patientAppointment.length ? patientAppointment[0].AppDateTime : '';
         this.getDoctors();
-        console.log('pat apt', this.patientAppointment);
-        // this.$store.dispatch('SET_APT_LIST_ASYNC', this.aptList);
       }).catch((error: any) => {
         this.$q.loading.hide();
         // tslint:disable-next-line:no-console
