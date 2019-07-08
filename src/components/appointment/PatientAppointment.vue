@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="text-center">
-                  <q-btn flat color="primary" label="Change" @click="showSchedule(patientAppointment)" />
+                  <q-btn flat color="primary" label="Change" @click="confirm = true"/>
                 </div>
             </q-banner>
             <!-- <div class="q-pa-sm">
@@ -160,7 +160,7 @@
 
         <q-card-actions align="right">
           <q-btn flat label="No" color="red" v-close-popup @click="showApt = true"/>
-          <q-btn flat label="Sure, Schedule new" color="primary" v-close-popup />
+          <q-btn flat label="Sure, Schedule new" color="primary" v-close-popup @click="showSchedule(patientAppointment)"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -176,7 +176,7 @@ import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
 @Component
 export default class PatientAppointment extends Vue {
   public confirm = false;
-  public patientAppointment = [];
+  public patientAppointment: any = [];
   public appDateTime = '';
   public showApt = false;
   public PatId = {};
@@ -392,7 +392,6 @@ export default class PatientAppointment extends Vue {
   public showSchedule(appointment: any) {
     // tslint:disable-next-line:no-console
     console.log('appointment coming', appointment);
-    this.confirm = true;
     this.showApt = !this.showApt;
     // tslint:disable-next-line:radix
     this.date = date.formatDate(parseInt(appointment.AppDateTime), 'YYYY/MM/DD');
@@ -495,8 +494,8 @@ export default class PatientAppointment extends Vue {
     // });
   }
   public onReset() {
-    this.date = false;
-    this.showApt = true;
+    this.confirm = false;
+    this.showApt = false;
     this.showTimes = false;
     this.date = date.formatDate(Date.now(), 'YYYY-MM-DD');
     this.DctName = 'Select Doctor';
