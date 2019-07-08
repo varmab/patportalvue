@@ -152,6 +152,18 @@
         </div>
       </div>
     </q-card-section>
+    <q-dialog v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <span class="q-ml-sm">Are you sure you want to cancel the current appointment and schedule new appointment?</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="No" color="red" v-close-popup @click="showApt = true"/>
+          <q-btn flat label="Sure, Schedule new" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-card>
 </template>
 
@@ -163,6 +175,7 @@ import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
 
 @Component
 export default class PatientAppointment extends Vue {
+  public confirm = false;
   public patientAppointment = [];
   public appDateTime = '';
   public showApt = false;
@@ -377,7 +390,9 @@ export default class PatientAppointment extends Vue {
   }
 
   public showSchedule(appointment: any) {
+    // tslint:disable-next-line:no-console
     console.log('appointment coming', appointment);
+    this.confirm = true;
     this.showApt = !this.showApt;
     // tslint:disable-next-line:radix
     this.date = date.formatDate(parseInt(appointment.AppDateTime), 'YYYY/MM/DD');
@@ -440,46 +455,47 @@ export default class PatientAppointment extends Vue {
     const connectionDetails = this.$store.state.connectionString;
     // tslint:disable-next-line:no-console
     console.log('create appointment object: ', appointment);
-    this.$apollo.mutate({
-      // Query
-      mutation: gql`mutation ($connection: ConnectionInput, $appointment: AppointmentInput) {
-        createAppointment(connection: $connection, appointment: $appointment) {
-          RecNo
-          PatId
-          DctId
-          DctName
-          FclDesc
-          FclId
-          Duration
-          AppType
-          AppDateTime
-          EntryDateTime
-        }
-      }`,
-      // Parameters
-      variables: {
-        appointment,
-        connection: connectionDetails,
-      },
-    }).then((data: any) => {
-      // this.$q.loading.hide();
-      // tslint:disable-next-line:no-console
-      console.log('appointment created sussessfully', data);
-      this.$q.notify({
-        color: 'green-4',
-        textColor: 'white',
-        icon: 'fas fa-check-circle',
-        message: 'Appointment created successfully!',
-      });
-      this.onReset();
-      this.$router.push(`${this.path}`);
-    }).catch((error: any) => {
-      this.$q.loading.hide();
-      // tslint:disable-next-line:no-console
-      console.error('error in api call: ', error);
-    });
+    // this.$apollo.mutate({
+    //   // Query
+    //   mutation: gql`mutation ($connection: ConnectionInput, $appointment: AppointmentInput) {
+    //     createAppointment(connection: $connection, appointment: $appointment) {
+    //       RecNo
+    //       PatId
+    //       DctId
+    //       DctName
+    //       FclDesc
+    //       FclId
+    //       Duration
+    //       AppType
+    //       AppDateTime
+    //       EntryDateTime
+    //     }
+    //   }`,
+    //   // Parameters
+    //   variables: {
+    //     appointment,
+    //     connection: connectionDetails,
+    //   },
+    // }).then((data: any) => {
+    //   // this.$q.loading.hide();
+    //   // tslint:disable-next-line:no-console
+    //   console.log('appointment created sussessfully', data);
+    //   this.$q.notify({
+    //     color: 'green-4',
+    //     textColor: 'white',
+    //     icon: 'fas fa-check-circle',
+    //     message: 'Appointment created successfully!',
+    //   });
+    //   this.onReset();
+    //   this.$router.push(`${this.path}`);
+    // }).catch((error: any) => {
+    //   this.$q.loading.hide();
+    //   // tslint:disable-next-line:no-console
+    //   console.error('error in api call: ', error);
+    // });
   }
   public onReset() {
+    this.date = false;
     this.showApt = true;
     this.showTimes = false;
     this.date = date.formatDate(Date.now(), 'YYYY-MM-DD');

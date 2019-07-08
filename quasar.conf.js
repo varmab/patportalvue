@@ -67,6 +67,7 @@ module.exports = function (ctx) {
         'QPopupProxy',
         'QBtnDropdown',
         'QBanner',
+        'QDialog',
       ],
 
       directives: [
