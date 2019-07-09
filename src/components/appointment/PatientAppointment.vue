@@ -206,49 +206,52 @@ export default class PatientAppointment extends Vue {
   public allAppointmentTypes = [];
   public times = [
     {
-      time: '07:30 AM',
+      time: '07:30',
     },
     {
-      time: '08:30 AM',
+      time: '08:30',
     },
     {
-      time: '09:30 AM',
+      time: '09:30',
     },
     {
-      time: '10:30 AM',
+      time: '10:30',
     },
     {
-      time: '11:30 AM',
+      time: '11:30',
     },
     {
-      time: '12:30 PM',
+      time: '12:30',
     },
     {
-      time: '01:30 PM',
+      time: '14:30',
     },
     {
-      time: '02:30 PM',
+      time: '15:30',
     },
     {
-      time: '03:30 PM',
+      time: '16:30',
     },
     {
-      time: '04:30 PM',
+      time: '17:30',
     },
     {
-      time: '05:30 PM',
+      time: '18:30',
     },
     {
-      time: '06:30 PM',
+      time: '19:30',
     },
     {
-      time: '07:30 PM',
+      time: '20:30',
+    },
+    {
+      time: '21:30',
     },
   ];
 
   get aptDate() {
     // tslint:disable-next-line:radix
-    return date.formatDate(parseInt(this.appDateTime), 'MMM DD YYYY, h:mm A');
+    return date.formatDate(parseInt(this.appDateTime), 'MMM DD YYYY, hh:mm A');
   }
 
   @Watch('date')
@@ -396,17 +399,53 @@ export default class PatientAppointment extends Vue {
   }
 
   public showSchedule(appointment: any) {
+      const connectionDetails = this.$store.state.connectionString;
+      const deleteAptObj = {
+        // tslint:disable-next-line:radix
+        AppDateTime: date.formatDate(parseInt(appointment.AppDateTime), 'YYYY-MM-DD hh:mm:ss'),
+        PatId: appointment.PatId,
+      };
+      console.log('deleteAptObj', deleteAptObj);
+    //   this.$apollo.mutate({
+    //   // Query
+    //   mutation: gql`mutation ($connection: ConnectionInput, $appointment: DeletePatAptInput) {
+    //     deletePatApt(connection: $connection, appointment: $appointment) {
+    //       message
+    //     }
+    //   }`,
+    //   // Parameters
+    //   variables: {
+    //     appointment: deleteAptObj,
+    //     connection: connectionDetails,
+    //   },
+    // }).then((data: any) => {
+    //   // this.$q.loading.hide();
+    //   // tslint:disable-next-line:no-console
+    //   console.log('appointment created sussessfully', data);
+    //   this.$q.notify({
+    //     color: 'green-4',
+    //     textColor: 'white',
+    //     icon: 'fas fa-check-circle',
+    //     message: 'Appointment created successfully!',
+    //   });
+    //   this.onReset();
+    //   this.$router.push(`${this.path}`);
+    // }).catch((error: any) => {
+    //   this.$q.loading.hide();
+    //   // tslint:disable-next-line:no-console
+    //   console.error('error in api call: ', error);
+    // });
     // tslint:disable-next-line:no-console
-    console.log('appointment coming', appointment);
-    this.showApt = !this.showApt;
+      console.log('appointment coming', appointment);
+      this.showApt = !this.showApt;
     // tslint:disable-next-line:radix
-    this.date = date.formatDate(parseInt(appointment.AppDateTime), 'YYYY/MM/DD');
-    this.DctId = appointment.DctId;
-    this.DctName = appointment.DctName;
-    this.FclId = appointment.FclId;
-    this.FclDesc = appointment.FclDesc;
-    this.Type = appointment.AppType;
-    this.RecNo = appointment.RecNo;
+      this.date = date.formatDate(parseInt(appointment.AppDateTime), 'YYYY/MM/DD');
+      this.DctId = appointment.DctId;
+      this.DctName = appointment.DctName;
+      this.FclId = appointment.FclId;
+      this.FclDesc = appointment.FclDesc;
+      this.Type = appointment.AppType;
+      this.RecNo = appointment.RecNo;
   }
 
   public onSubmit() {
