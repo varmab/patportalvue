@@ -144,10 +144,16 @@
           </div>
           <div v-if="showTimes" class="margin-auto col-xs-12 col-sm-8 col-md-6">
             <div class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>Available slots</div>
-            <span v-for="slot in times" :key="slot+1" class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>
+            <q-calendar
+              v-model="date"
+              view="day"
+              locale="en-us"
+              style="height: 400px;"
+            />
+            <!-- <span v-for="slot in times" :key="slot+1" class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>
               <q-btn v-if="slots.findIndex(booked => booked.time === slot.time) > -1" color="green" :label="slot.time" @click="createAppointment(slot)" disable/>
               <q-btn v-else color="green" :label="slot.time" @click="createAppointment(slot)"/>
-            </span>
+            </span> -->
           </div>
         </div>
       </div>

@@ -2,5 +2,6 @@
   "@quasar/typescript": {
     "webpack": "plugin",
     "rename": true
-  }
+  },
+  "@quasar/qcalendar": {}
 }
