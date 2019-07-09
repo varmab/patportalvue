@@ -144,16 +144,11 @@
           </div>
           <div v-if="showTimes" class="margin-auto col-xs-12 col-sm-8 col-md-6">
             <div class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>Available slots</div>
-            <q-calendar
-              v-model="date"
-              view="day"
-              locale="en-us"
-              style="height: 400px;"
-            />
-            <!-- <span v-for="slot in times" :key="slot+1" class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>
+            <!-- <DayCalendar :selectedDate = "date"/> -->
+            <span v-for="slot in times" :key="slot+1" class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>
               <q-btn v-if="slots.findIndex(booked => booked.time === slot.time) > -1" color="green" :label="slot.time" @click="createAppointment(slot)" disable/>
               <q-btn v-else color="green" :label="slot.time" @click="createAppointment(slot)"/>
-            </span> -->
+            </span>
           </div>
         </div>
       </div>
@@ -178,8 +173,13 @@ import gql from 'graphql-tag';
 import { date } from 'quasar';
 import { Key } from 'readline';
 import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
+import DayCalendar from './DayCalendar.vue';
 
-@Component
+@Component({
+  components: {
+    DayCalendar,
+  },
+})
 export default class PatientAppointment extends Vue {
   public confirm = false;
   public patientAppointment: any = [];
@@ -443,11 +443,14 @@ export default class PatientAppointment extends Vue {
   }
 
   public createAppointment(time: any) {
-    this.$q.loading.show({
-      message: 'Creating appointment your appointment',
-    });
-    const selectedDate = date.formatDate(this.date, 'MMM DD YYYY');
-    const modifiedDate = this.date + ' ' + time.time;
+    // this.$q.loading.show({
+    //   message: 'Creating appointment your appointment',
+    // });
+    const selectedDate = date.formatDate(this.date, 'YYYY-MM-DD');
+    const timeMod = time.time + ':00';
+    const selectedTime = date.formatDate(timeMod, 'hh:mm:ss');
+    const modifiedDate =  selectedDate + ' ' + selectedTime;
+    console.log('AppDateTime', modifiedDate);
     const appointment = {
       PatId: this.$store.state.PatId.PatId,
       PatName: 'XYZ',
