@@ -75,6 +75,9 @@
       </div>
     </div>
     <q-card-section v-else>
+      <q-card-section>
+        <div class="q-table__title">Schedule New Appointment</div>
+      </q-card-section>
       <div class="q-pa-md">
         <div class="row">
           <div class="margin-auto">
@@ -193,13 +196,13 @@
           >
             <div class="q-gutter-sm">
                <div>
-                <span><span class="text-weight-light">Doctor:</span> {{DctName}}</span>
+                <span class="three-dots"><span class="text-weight-light">Doctor:</span> {{DctName}}</span>
               </div>
               <div>
-                <span><span class="text-weight-light">Facility:</span> {{FclDesc}}</span>
+                <span class="three-dots"><span class="text-weight-light">Facility:</span> {{FclDesc}}</span>
               </div>
               <div>
-                <span><span class="text-weight-light">Apt Type:</span> {{Type}}</span>
+                <span class="three-dots"><span class="text-weight-light">Apt Type:</span> {{Type}}</span>
               </div>
             </div>
            
@@ -544,15 +547,15 @@ export default class PatientAppointment extends Vue {
       console.log('appointment coming', appointment);
       this.showApt = !this.showApt;
     // tslint:disable-next-line:radix
-      this.date = date.formatDate(parseInt(appointment.AppDateTime), 'YYYY/MM/DD');
+      this.date = date.formatDate(Date.now(), 'YYYY/MM/DD');
       // tslint:disable-next-line:radix
-      this.selectedDate = date.formatDate(parseInt(appointment.AppDateTime), 'YYYY-MM-DD');
-      this.DctId = appointment.DctId;
-      this.DctName = appointment.DctName ? appointment.DctName : 'Select Doctor';
-      this.FclId = appointment.FclId;
-      this.FclDesc = appointment.FclDesc ? appointment.FclDesc : 'Select Facility';
-      this.Type = appointment.AppType ? appointment.AppType : 'Select Appointment Type';
-      this.RecNo = appointment.RecNo;
+      this.selectedDate = date.formatDate(Date.now(), 'YYYY-MM-DD');
+      this.DctId = '';
+      this.DctName = 'Select Doctor';
+      this.FclId = '';
+      this.FclDesc = 'Select Facility';
+      this.Type = 'Select Appointment Type';
+      this.RecNo = '';
   }
 
   public onSubmit() {
@@ -773,7 +776,7 @@ export default class PatientAppointment extends Vue {
   margin 0 auto
 .three-dots
   display: inline-block;
-  width: 180px;
+  width: 220px;
   white-space: nowrap;
   overflow: hidden !important;
   text-overflow: ellipsis;
