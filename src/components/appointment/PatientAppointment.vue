@@ -260,7 +260,7 @@
           </q-form>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat label="OK" color="primary" @click="saveEvent"></q-btn>
+          <q-btn flat label="OK" color="primary" @click="createAppointment(dateTimeStart)"></q-btn>
           <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
         </q-card-actions>
       </q-card>
@@ -683,12 +683,12 @@ export default class PatientAppointment extends Vue {
     }
 
   public createAppointment(time: any) {
+    console.log('createAppointment -> time', time);
     // this.$q.loading.show({
     //   message: 'Creating appointment your appointment',
     // });
     const selectedDate = date.formatDate(this.date, 'YYYY-MM-DD');
-    const timeMod = time.time + ':00';
-    const selectedTime = date.formatDate(timeMod, 'hh:mm:ss');
+    const selectedTime = date.formatDate(time, 'hh:mm:ss');
     const modifiedDate =  selectedDate + ' ' + selectedTime;
     console.log('AppDateTime', modifiedDate);
     const appointment = {
