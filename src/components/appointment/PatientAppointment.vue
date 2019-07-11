@@ -191,41 +191,27 @@
             ref='event'
             class="q-gutter-md"
           >
-            <q-input v-model="eventForm.title" autofocus label="Doctor" :rules="[v => v && v.length > 0 || 'Field cannot be empty']"></q-input>
-            <q-input v-model="eventForm.details" label="Details"></q-input>
-            <q-checkbox v-model="eventForm.allDay" label="All-Day event?"></q-checkbox>
+            <div class="q-gutter-sm">
+               <div>
+                <span><span class="text-weight-light">Doctor:</span> {{DctName}}</span>
+              </div>
+              <div>
+                <span><span class="text-weight-light">Facility:</span> {{FclDesc}}</span>
+              </div>
+              <div>
+                <span><span class="text-weight-light">Apt Type:</span> {{Type}}</span>
+              </div>
+            </div>
+           
 
-            <q-input v-if="eventForm.allDay" color="blue-6" filled v-model="eventForm.dateTimeStart" label="Enter date" mask="####-##-##">
-              <template #append>
-                <q-icon name="event" class="cursor-pointer">
-                  <q-popup-proxy v-model="showDateScrollerAllDay">
-                    <q-date-scroller
-                      v-model="eventForm.dateTimeStart"
-                      :locale="locale"
-                      :hour24-format="true"
-                      :rounded-borders="true"
-                      border-color="#2196f3"
-                      bar-color="#2196f3"
-                      color="white"
-                      background-color="primary"
-                      inner-color="primary"
-                      inner-background-color="white"
-                      :style="scrollerPopupStyle160"
-                      @close="() => { showDateScrollerAllDay = false }"
-                    />
-                  </q-popup-proxy>
-                </q-icon>
-              </template>
-            </q-input>
-
-            <div v-else class="q-gutter-sm">
-              <q-input color="blue-6" outlined v-model="eventForm.dateTimeStart" label="Event start date and time" mask="####-##-## ##:##">
+            <div class="q-gutter-sm">
+              <q-input color="blue-6" outlined v-model="dateTimeStart" label="Event start date and time" mask="####-##-## ##:##">
                 <template #append>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy v-model="showDateTimeScrollerStart">
 
                       <q-date-time-scroller
-                        v-model="eventForm.dateTimeStart"
+                        v-model="dateTimeStart"
                         :locale="locale"
                         :hour24-format="true"
                         :rounded-borders="true"
@@ -243,13 +229,13 @@
                   </q-icon>
                 </template>
               </q-input>
-              <q-input color="blue-6" outlined v-model="eventForm.dateTimeEnd" label="Event end date and time" mask="####-##-## ##:##">
+              <q-input color="blue-6" outlined v-model="dateTimeEnd" label="Event end date and time" mask="####-##-## ##:##">
                 <template #append>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy v-model="showDateTimeScrollerEnd">
 
                       <q-date-time-scroller
-                        v-model="eventForm.dateTimeEnd"
+                        v-model="dateTimeEnd"
                         :locale="locale"
                         :hour24-format="true"
                         :rounded-borders="true"
@@ -268,20 +254,6 @@
                 </template>
               </q-input>
             </div>
-
-            <q-input v-model="eventForm.icon" label="Icon"></q-input>
-            <q-input
-              filled
-              v-model="eventForm.bgcolor"
-            >
-              <template #append>
-                <q-icon name="colorize" class="cursor-pointer">
-                  <q-popup-proxy>
-                    <q-color v-model="eventForm.bgcolor"></q-color>
-                  </q-popup-proxy>
-                </q-icon>
-              </template>
-            </q-input>
           </q-form>
         </q-card-section>
         <q-card-actions align="right">
@@ -299,15 +271,6 @@ import { date } from 'quasar';
 import { Key } from 'readline';
 import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
 import DayCalendar from './DayCalendar.vue';
-const formDefault = {
-  title: '',
-  details: '',
-  allDay: false,
-  dateTimeStart: '',
-  dateTimeEnd: '',
-  icon: '',
-  bgcolor: '#0000FF',
-};
 
 @Component({
   components: {
@@ -327,7 +290,6 @@ export default class PatientAppointment extends Vue {
   public path = '';
   public showTimes = false;
   public date = date.formatDate(Date.now(), 'YYYY-MM-DD');
-  public selectedDate = '';
   public doctorErr = false;
   public DctId = '';
   public DctName = 'Select Doctor';
@@ -384,9 +346,13 @@ export default class PatientAppointment extends Vue {
       time: '21:30',
     },
   ];
+  public selectedDate = '';
   public addEvent = false;
   public contextDay: any = null;
-  public eventForm: any = { ...formDefault};
+  public showDateTimeScrollerStart = false;
+  public showDateTimeScrollerEnd = false;
+  public dateTimeStart = '';
+  public dateTimeEnd = '';
 
   get aptDate() {
     // tslint:disable-next-line:radix
@@ -653,7 +619,7 @@ export default class PatientAppointment extends Vue {
       });
     }
   }
-  
+
   public getTimestamp(day: any) {
     return day.date + ' ' + this.padTime(day.hour) + ':' + this.padTime(day.minute) + ':00.000';
   }
@@ -671,7 +637,7 @@ export default class PatientAppointment extends Vue {
   }
 
   public padTime = (val: any) => {
-    console.log('time formatttt', val);
+    // console.log('time formatttt', val);
     val = Math.floor(val);
     if (val < 10) {
       return '0' + val;
@@ -691,7 +657,7 @@ export default class PatientAppointment extends Vue {
     }
 
   public scheduleApt(day: any, type: any) {
-    console.log('add called', day, type);
+    // console.log('add called', day, type);
     // tslint:disable-next-line:max-line-length
     if (day.disabled === true) {
       return;
@@ -705,13 +671,11 @@ export default class PatientAppointment extends Vue {
         const endTime = date.addToDate(startTime, { hours: 1 });
         const formatedDate = date.formatDate(endTime, 'YYYY-MM-DD');
         // const formatedTime = date.formatDate(endTime, 'YYYY-MM-DD');
-        this.eventForm.dateTimeEnd = formatedDate + ' ' + this.formatTime(endTime); // endTime.toString()
+        this.dateTimeEnd = formatedDate + ' ' + this.formatTime(endTime); // endTime.toString()
       } else {
         timestamp = this.contextDay.date + ' 00:00';
       }
-    this.eventForm.dateTimeStart = timestamp;
-    this.eventForm.allDay = this.contextDay.hasTime === false;
-    this.eventForm.bgcolor = '#0000FF'; // starting color
+    this.dateTimeStart = timestamp;
     this.addEvent = true; // show dialog
     }
 
