@@ -144,11 +144,23 @@
           </div>
           <div v-if="showTimes" class="margin-auto col-xs-12 col-sm-8 col-md-6">
             <div class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>Available slots</div>
+            <q-calendar
+              v-model="selectedDate"
+              view="day"
+              hour24-format
+              :interval-count="86"
+              :interval-minutes="15"
+              @click:interval="scheduleApt"
+              @click:date="scheduleApt"
+              @click:time="scheduleApt"
+              locale="en-us"
+              style="height: 400px;"
+            />
             <!-- <DayCalendar :selectedDate = "date"/> -->
-            <span v-for="slot in times" :key="slot+1" class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>
+            <!-- <span v-for="slot in times" :key="slot+1" class="q-pa-md q-pa-sm q-pa-xs q-gutter-sm" padding>
               <q-btn v-if="slots.findIndex(booked => booked.time === slot.time) > -1" color="green" :label="slot.time" @click="createAppointment(slot)" disable/>
               <q-btn v-else color="green" :label="slot.time" @click="createAppointment(slot)"/>
-            </span>
+            </span> -->
           </div>
         </div>
       </div>
@@ -188,10 +200,12 @@ export default class PatientAppointment extends Vue {
   public PatId = {};
   public slots: any = [];
   public aptList = [];
+  public getAvailableSlots = [];
   public connection = {};
   public path = '';
   public showTimes = false;
   public date = date.formatDate(Date.now(), 'YYYY-MM-DD');
+  public selectedDate = '';
   public doctorErr = false;
   public DctId = '';
   public DctName = 'Select Doctor';
@@ -440,11 +454,13 @@ export default class PatientAppointment extends Vue {
       this.showApt = !this.showApt;
     // tslint:disable-next-line:radix
       this.date = date.formatDate(parseInt(appointment.AppDateTime), 'YYYY/MM/DD');
+      // tslint:disable-next-line:radix
+      this.selectedDate = date.formatDate(parseInt(appointment.AppDateTime), 'YYYY-MM-DD');
       this.DctId = appointment.DctId;
-      this.DctName = appointment.DctName;
+      this.DctName = appointment.DctName ? appointment.DctName : 'Select Doctor';
       this.FclId = appointment.FclId;
-      this.FclDesc = appointment.FclDesc;
-      this.Type = appointment.AppType;
+      this.FclDesc = appointment.FclDesc ? appointment.FclDesc : 'Select Facility';
+      this.Type = appointment.AppType ? appointment.AppType : 'Select Appointment Type';
       this.RecNo = appointment.RecNo;
   }
 
@@ -459,18 +475,50 @@ export default class PatientAppointment extends Vue {
       this.typeErr = true;
       this.showTimes = false;
     } else {
-      this.aptList.map((apt: any, key: any) => {
-        const bookedSlot: any = {};
-        const selectedDate = date.formatDate(this.date, 'MMM DD YYYY');
-        // tslint:disable-next-line:radix
-        const AptDate = date.formatDate(parseInt(apt.AppDateTime), 'MMM DD YYYY');
-        // tslint:disable-next-line:radix
-        const AptTime = date.formatDate(parseInt(apt.AppDateTime), 'hh:mm A');
-        if (selectedDate === AptDate) {
-          bookedSlot.time = AptTime;
-          this.slots.push(bookedSlot);
-        }
+      this.selectedDate = date.formatDate(this.date, 'YYYY-MM-DD');
+      const availSlots = {
+        AppDateTime: this.selectedDate,
+        DctId: this.DctId,
+        FclId: this.FclId,
+        AppType: this.Type,
+      };
+      // tslint:disable-next-line:no-console
+      console.log('availSlots', availSlots);
+      this.$q.loading.show({
+        message: 'Please wait while loading..',
       });
+      this.$apollo.query({
+        query: gql`query getAvailableSlots ($connection: ConnectionInput, $availSlots: AvailSlotsInput) {
+          getAvailableSlots(connection: $connection, availSlots: $availSlots) {
+            appTime
+            duration
+          }
+        }`,
+      variables: {
+        connection: this.connection,
+        availSlots,
+      },
+      }).then((data: any) => {
+        this.getAvailableSlots = data.data.getAvailableSlots;
+        console.log('available slots', this.getAvailableSlots);
+        this.$q.loading.hide();
+      }).catch((error: any) => {
+          this.$q.loading.hide();
+          // tslint:disable-next-line:no-console
+          console.error('error in get all doctors: ', error);
+      });
+      // this.aptList.map((apt: any, key: any) => {
+      //   const bookedSlot: any = {};
+      //   const selectedDate = date.formatDate(this.date, 'MMM DD YYYY');
+      //   // tslint:disable-next-line:radix
+      //   const AptDate = date.formatDate(parseInt(apt.AppDateTime), 'MMM DD YYYY');
+      //   // tslint:disable-next-line:radix
+      //   const AptTime = date.formatDate(parseInt(apt.AppDateTime), 'hh:mm A');
+      //   if (selectedDate === AptDate) {
+      //     bookedSlot.time = AptTime;
+      //     this.slots.push(bookedSlot);
+      //   }
+      // });
       this.showTimes = true;
       this.$q.notify({
         color: 'green-4',
@@ -480,6 +528,29 @@ export default class PatientAppointment extends Vue {
       });
     }
   }
+
+  public scheduleApt(interval: any, type: any) {
+    console.log('add called', interval, type);
+      // tslint:disable-next-line:max-line-length
+      // if (day.disabled === true || this.calendarView === 'scheduler' || this.calendarView === 'week-scheduler' || this.calendarView === 'month-scheduler') {
+      //   return
+      // }
+      // this.resetForm();
+      // this.contextDay = { ...day };
+      // let timestamp;
+      // if (this.contextDay.hasTime === true) {
+      //   timestamp = this.getTimestamp(this.adjustTimestamp(this.contextDay))
+      //   let startTime = new Date(timestamp);
+      //   let endTime = date.addToDate(startTime, { hours: 1 });
+      //   this.eventForm.dateTimeEnd = this.formatDate(endTime) + ' ' + this.formatTime(endTime); // endTime.toString()
+      // } else {
+      //   timestamp = this.contextDay.date + ' 00:00';
+      // }
+      // this.eventForm.dateTimeStart = timestamp;
+      // this.eventForm.allDay = this.contextDay.hasTime === false;
+      // this.eventForm.bgcolor = '#0000FF'; // starting color
+      // this.addEvent = true; // show dialog
+    }
 
   public createAppointment(time: any) {
     // this.$q.loading.show({
@@ -546,6 +617,7 @@ export default class PatientAppointment extends Vue {
     this.showApt = false;
     this.showTimes = false;
     this.date = date.formatDate(Date.now(), 'YYYY-MM-DD');
+    this.selectedDate = date.formatDate(Date.now(), 'YYYY-MM-DD');
     this.DctName = 'Select Doctor';
     this.DctId = '';
     this.doctorErr = false;
