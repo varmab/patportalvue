@@ -177,6 +177,119 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <q-dialog v-model="addEvent" no-backdrop-dismiss>
+      <q-card v-if="addEvent" style="width: 400px;">
+        <q-toolbar class="bg-primary text-white">
+          <q-toolbar-title>
+            Create Appointment
+          </q-toolbar-title>
+          <q-btn flat round color="white" icon="close" v-close-popup></q-btn>
+        </q-toolbar>
+        <q-card-section class="inset-shadow">
+          <q-form
+            v-if="contextDay"
+            ref='event'
+            class="q-gutter-md"
+          >
+            <q-input v-model="eventForm.title" autofocus label="Doctor" :rules="[v => v && v.length > 0 || 'Field cannot be empty']"></q-input>
+            <q-input v-model="eventForm.details" label="Details"></q-input>
+            <q-checkbox v-model="eventForm.allDay" label="All-Day event?"></q-checkbox>
+
+            <q-input v-if="eventForm.allDay" color="blue-6" filled v-model="eventForm.dateTimeStart" label="Enter date" mask="####-##-##">
+              <template #append>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy v-model="showDateScrollerAllDay">
+                    <q-date-scroller
+                      v-model="eventForm.dateTimeStart"
+                      :locale="locale"
+                      :hour24-format="true"
+                      :rounded-borders="true"
+                      border-color="#2196f3"
+                      bar-color="#2196f3"
+                      color="white"
+                      background-color="primary"
+                      inner-color="primary"
+                      inner-background-color="white"
+                      :style="scrollerPopupStyle160"
+                      @close="() => { showDateScrollerAllDay = false }"
+                    />
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+
+            <div v-else class="q-gutter-sm">
+              <q-input color="blue-6" outlined v-model="eventForm.dateTimeStart" label="Event start date and time" mask="####-##-## ##:##">
+                <template #append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy v-model="showDateTimeScrollerStart">
+
+                      <q-date-time-scroller
+                        v-model="eventForm.dateTimeStart"
+                        :locale="locale"
+                        :hour24-format="true"
+                        :rounded-borders="true"
+                        border-color="#2196f3"
+                        bar-color="#2196f3"
+                        color="white"
+                        background-color="primary"
+                        inner-color="primary"
+                        inner-background-color="white"
+                        :style="scrollerPopupStyle280"
+                        @close="() => { showDateTimeScrollerStart = false }"
+                      />
+
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+              <q-input color="blue-6" outlined v-model="eventForm.dateTimeEnd" label="Event end date and time" mask="####-##-## ##:##">
+                <template #append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy v-model="showDateTimeScrollerEnd">
+
+                      <q-date-time-scroller
+                        v-model="eventForm.dateTimeEnd"
+                        :locale="locale"
+                        :hour24-format="true"
+                        :rounded-borders="true"
+                        border-color="#2196f3"
+                        bar-color="#2196f3"
+                        color="white"
+                        background-color="primary"
+                        inner-color="primary"
+                        inner-background-color="white"
+                        :style="scrollerPopupStyle280"
+                        @close="() => { showDateTimeScrollerEnd = false }"
+                      />
+
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
+
+            <q-input v-model="eventForm.icon" label="Icon"></q-input>
+            <q-input
+              filled
+              v-model="eventForm.bgcolor"
+            >
+              <template #append>
+                <q-icon name="colorize" class="cursor-pointer">
+                  <q-popup-proxy>
+                    <q-color v-model="eventForm.bgcolor"></q-color>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </q-form>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="OK" color="primary" @click="saveEvent"></q-btn>
+          <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-card>
 </template>
 
@@ -186,6 +299,15 @@ import { date } from 'quasar';
 import { Key } from 'readline';
 import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
 import DayCalendar from './DayCalendar.vue';
+const formDefault = {
+  title: '',
+  details: '',
+  allDay: false,
+  dateTimeStart: '',
+  dateTimeEnd: '',
+  icon: '',
+  bgcolor: '#0000FF',
+};
 
 @Component({
   components: {
@@ -262,6 +384,9 @@ export default class PatientAppointment extends Vue {
       time: '21:30',
     },
   ];
+  public addEvent = false;
+  public contextDay: any = null;
+  public eventForm: any = { ...formDefault};
 
   get aptDate() {
     // tslint:disable-next-line:radix
@@ -528,28 +653,66 @@ export default class PatientAppointment extends Vue {
       });
     }
   }
+  
+  public getTimestamp(day: any) {
+    return day.date + ' ' + this.padTime(day.hour) + ':' + this.padTime(day.minute) + ':00.000';
+  }
 
-  public scheduleApt(interval: any, type: any) {
-    console.log('add called', interval, type);
-      // tslint:disable-next-line:max-line-length
-      // if (day.disabled === true || this.calendarView === 'scheduler' || this.calendarView === 'week-scheduler' || this.calendarView === 'month-scheduler') {
-      //   return
-      // }
+  public adjustTimestamp(day: any) {
+    day.minute = day.minute < 15 || day.minute >= 45 ? 0 : 30;
+    return day;
+  }
+
+  public addOrUpdateEvent() {
+    if (this.contextDay && this.contextDay.bgcolor) {
+      return 'Update';
+    }
+    return 'Add';
+  }
+
+  public padTime = (val: any) => {
+    console.log('time formatttt', val);
+    val = Math.floor(val);
+    if (val < 10) {
+      return '0' + val;
+    }
+    return val + '';
+  }
+
+      // tslint:disable-next-line:no-shadowed-variable
+    public formatTime(date: any) {
+      // tslint:disable-next-line:one-variable-per-declaration
+      const d = date !== void 0 ? new Date(date) : new Date(),
+        hours = '' + d.getHours(),
+        minutes = '' + d.getMinutes();
+      const pHours = this.padTime(hours);
+      const pMinutes = this.padTime(minutes);
+      return [pHours, pMinutes].join(':');
+    }
+
+  public scheduleApt(day: any, type: any) {
+    console.log('add called', day, type);
+    // tslint:disable-next-line:max-line-length
+    if (day.disabled === true) {
+      return;
+    }
       // this.resetForm();
-      // this.contextDay = { ...day };
-      // let timestamp;
-      // if (this.contextDay.hasTime === true) {
-      //   timestamp = this.getTimestamp(this.adjustTimestamp(this.contextDay))
-      //   let startTime = new Date(timestamp);
-      //   let endTime = date.addToDate(startTime, { hours: 1 });
-      //   this.eventForm.dateTimeEnd = this.formatDate(endTime) + ' ' + this.formatTime(endTime); // endTime.toString()
-      // } else {
-      //   timestamp = this.contextDay.date + ' 00:00';
-      // }
-      // this.eventForm.dateTimeStart = timestamp;
-      // this.eventForm.allDay = this.contextDay.hasTime === false;
-      // this.eventForm.bgcolor = '#0000FF'; // starting color
-      // this.addEvent = true; // show dialog
+    this.contextDay = { ...day };
+    let timestamp;
+    if (this.contextDay.hasTime === true) {
+        timestamp = this.getTimestamp(this.adjustTimestamp(this.contextDay));
+        const startTime = new Date(timestamp);
+        const endTime = date.addToDate(startTime, { hours: 1 });
+        const formatedDate = date.formatDate(endTime, 'YYYY-MM-DD');
+        // const formatedTime = date.formatDate(endTime, 'YYYY-MM-DD');
+        this.eventForm.dateTimeEnd = formatedDate + ' ' + this.formatTime(endTime); // endTime.toString()
+      } else {
+        timestamp = this.contextDay.date + ' 00:00';
+      }
+    this.eventForm.dateTimeStart = timestamp;
+    this.eventForm.allDay = this.contextDay.hasTime === false;
+    this.eventForm.bgcolor = '#0000FF'; // starting color
+    this.addEvent = true; // show dialog
     }
 
   public createAppointment(time: any) {
