@@ -2,32 +2,32 @@
   <q-card class="my-card">
     <div class="q-pa-sm" v-if="showApt">
       <div class="row">
-        <div class="margin-auto">
+        <div class="margin-auto col-lg-8 col-md-8 col-sm-8 col-xs-12">
           <q-card-section>
-            <q-banner class="bg-grey-3 " style= "max-width: 400px">
+            <q-banner class="bg-grey-3 " >
               <template>
                 <div class="text-h6 text-weight-regular text-center">Your Next Appointment</div>
               </template>
               <q-separator inset />
                 <div class="margin-auto">
                     <div class="row text-center">
-                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <span class="text-weight-light">Apt Date: </span>
-                        <span>{{aptDate}}</span>
+                      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-flex">
+                        <div class="text-weight-light width-30">Apt Date: </div>
+                        <div class="width-70">{{aptDate}}</div>
                       </div>
-                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 d-flex align-items-center">
-                        <span class="text-weight-light">Doctor: </span>
-                        <span class="three-dots">{{patientAppointment.DctName}}</span>
+                      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-flex">
+                        <div class="text-weight-light width-30">Doctor: </div>
+                        <div class="three-dots width-70">{{patientAppointment.DctName}}</div>
                       </div>
                     </div>
                     <div class="row text-center">
-                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <span class="text-weight-light">Facility: </span>
-                        <span class="three-dots">{{patientAppointment.FclDesc}}</span>
+                      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-flex">
+                        <div class="text-weight-light width-30">Facility: </div>
+                        <div class="three-dots width-70">{{patientAppointment.FclDesc}}</div>
                       </div>
-                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <span class="text-weight-light">App Type: </span>
-                        <span class="three-dots">{{patientAppointment.AppType}}</span>
+                      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-flex">
+                        <div class="text-weight-light width-30">App Type: </div>
+                        <div class="three-dots width-70">{{patientAppointment.AppType}}</div>
                       </div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
       <q-card-section>
         <div class="q-table__title">Schedule New Appointment</div>
       </q-card-section>
-      <div class="q-pa-md">
+      <div class="q-pa-md q-pa-0">
         <div class="row">
           <div class="margin-auto">
             <div class="q-pa-xs" style="max-width: 400px">
@@ -151,7 +151,8 @@
               v-model="selectedDate"
               view="day"
               hour24-format
-              :interval-count="96"
+              :interval-start="10"
+              :interval-count="16"
               :interval-minutes="intervalMinutes"
               @click:interval="scheduleApt"
               @click:date="scheduleApt"
@@ -356,7 +357,8 @@ export default class PatientAppointment extends Vue {
   public showDateTimeScrollerEnd = false;
   public dateTimeStart = '';
   public dateTimeEnd = '';
-  public intervalMinutes: any = Number;
+  public intervalMinutes: any = '';
+  public intervalCount: any = '';
 
   get aptDate() {
     // tslint:disable-next-line:radix
@@ -609,6 +611,15 @@ export default class PatientAppointment extends Vue {
             length--;
             if (length === 0) {
               this.intervalMinutes = slot.duration;
+              if (this.intervalMinutes === 10) {
+                this.intervalCount = 6 * 24;
+              } else if (this.intervalMinutes === 15) {
+                this.intervalCount = 4 * 24;
+              } else if (this.intervalMinutes === 20) {
+                this.intervalCount = 3 * 24;
+              } else if (this.intervalMinutes === 30) {
+                this.intervalCount = 2 * 24;
+              }
             }
           });
         }
@@ -792,10 +803,19 @@ export default class PatientAppointment extends Vue {
 .margin-auto
   margin 0 auto
 .three-dots
-  display: inline-block;
-  width: 220px;
-  white-space: nowrap;
-  overflow: hidden !important;
-  text-overflow: ellipsis;
+  display: inline-block
+  width: 220px
+  white-space: nowrap
+  overflow: hidden !important
+  text-overflow: ellipsis
+.d-flex 
+  display : flex
+.width-70
+  width : 50%
+  text-align: left
+  padding: 0px 5px
+.width-30
+  width : 50%
+  text-align: left
 </style>
 
