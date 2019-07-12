@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="text-center">
-                  <q-btn flat color="primary" label="Change" @click="confirm = true"/>
+                  <q-btn flat color="primary" label="Cancel" @click="confirm = true"/>
                 </div>
             </q-banner>
             <!-- <div class="q-pa-sm">
@@ -151,8 +151,8 @@
               v-model="selectedDate"
               view="day"
               hour24-format
-              :interval-count="86"
-              :interval-minutes="15"
+              :interval-count="96"
+              :interval-minutes="intervalMinutes"
               @click:interval="scheduleApt"
               @click:date="scheduleApt"
               @click:time="scheduleApt"
@@ -356,6 +356,7 @@ export default class PatientAppointment extends Vue {
   public showDateTimeScrollerEnd = false;
   public dateTimeStart = '';
   public dateTimeEnd = '';
+  public intervalMinutes: any = Number;
 
   get aptDate() {
     // tslint:disable-next-line:radix
@@ -576,10 +577,8 @@ export default class PatientAppointment extends Vue {
         FclId: this.FclId,
         AppType: this.Type,
       };
-      // tslint:disable-next-line:no-console
-      console.log('availSlots', availSlots);
       this.$q.loading.show({
-        message: 'Please wait while loading..',
+        message: 'Please wait loading available slots.',
       });
       this.$apollo.query({
         query: gql`query getAvailableSlots ($connection: ConnectionInput, $availSlots: AvailSlotsInput) {
@@ -588,13 +587,31 @@ export default class PatientAppointment extends Vue {
             duration
           }
         }`,
-      variables: {
-        connection: this.connection,
-        availSlots,
-      },
+        variables: {
+          connection: this.connection,
+          availSlots,
+        },
       }).then((data: any) => {
         this.getAvailableSlots = data.data.getAvailableSlots;
         console.log('available slots', this.getAvailableSlots);
+        let length = this.getAvailableSlots.length;
+        const aSlots: any = [];
+        const aTime: any = {};
+        if (length >= 0) {
+          const obj = this.getAvailableSlots[0];
+          this.getAvailableSlots.map((slot: any, key) => {
+            const { appTime, duration } = slot;
+            // tslint:disable-next-line:radix
+            const time = date.formatDate(parseInt(appTime), 'hh:mm:ss');
+            // tslint:disable-next-line:radix
+            const aDate = date.formatDate(parseInt(appTime), 'YYYY-MM-DD');
+            console.log(`date: ${aDate}, time: ${time}`);
+            length--;
+            if (length === 0) {
+              this.intervalMinutes = slot.duration;
+            }
+          });
+        }
         this.$q.loading.hide();
       }).catch((error: any) => {
           this.$q.loading.hide();
