@@ -35,41 +35,6 @@
                   <q-btn flat color="primary" label="Cancel" @click="confirm = true"/>
                 </div>
             </q-banner>
-            <!-- <div class="q-pa-sm">
-              <div class="row">
-                <q-card class="my-card">
-                  <template>
-                <div class="text-h6 text-weight-regular text-center">Your Next Appointment</div>
-              </template>
-              <q-separator inset />
-                <div class="margin-auto">
-                    <div class="row text-center">
-                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <span class="text-weight-light">Apt Date: </span>
-                        <span>Aug 02 2019, 09AM - 10AM</span>
-                      </div>
-                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <span class="text-weight-light">Doctor: </span>
-                        <span>John Doe</span>
-                      </div>
-                    </div>
-                    <div class="row text-center">
-                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <span class="text-weight-light">Facility: </span>
-                        <span>Orthopedic</span>
-                      </div>
-                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <span class="text-weight-light">App Type: </span>
-                        <span>Emergency</span>
-                      </div>
-                    </div>
-                </div>
-                <div class="text-center">
-                  <q-btn flat color="primary" label="Change" @click="showApt = !showApt" />
-                </div>
-                </q-card>
-              </div>
-            </div> -->
           </q-card-section>
         </div>
       </div>
