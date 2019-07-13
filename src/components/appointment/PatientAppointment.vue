@@ -118,7 +118,7 @@
               hour24-format
               :interval-start="10"
               :interval-count="16"
-              :interval-minutes="intervalMinutes"
+              :interval-minutes="15"
               @click:interval="scheduleApt"
               @click:date="scheduleApt"
               @click:time="scheduleApt"
@@ -544,6 +544,7 @@ export default class PatientAppointment extends Vue {
         FclId: this.FclId,
         AppType: this.Type,
       };
+      console.log('OnSubmit -> availSlots', availSlots);
       this.$q.loading.show({
         message: 'Please wait loading available slots.',
       });
@@ -572,10 +573,11 @@ export default class PatientAppointment extends Vue {
             const time = date.formatDate(parseInt(appTime), 'hh:mm:ss');
             // tslint:disable-next-line:radix
             const aDate = date.formatDate(parseInt(appTime), 'YYYY-MM-DD');
-            console.log(`date: ${aDate}, time: ${time}`);
+            console.log(`date: ${aDate}, time: ${time} ${duration}`);
             length--;
+            this.intervalMinutes = slot.duration;
             if (length === 0) {
-              this.intervalMinutes = slot.duration;
+              console.log('intervalMinutes', this.intervalMinutes)
               if (this.intervalMinutes === 10) {
                 this.intervalCount = 6 * 24;
               } else if (this.intervalMinutes === 15) {
