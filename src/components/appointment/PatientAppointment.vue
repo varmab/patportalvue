@@ -1,12 +1,22 @@
 <template>
-  <div class="q-pa-md">
-    <q-table
-      title="List Of Pending Appointments"
-      :data="patientAppointment"
-      :columns="columns"
-      row-key="name"
-    />
+  <div>
+    <div class="q-pa-md">
+      <q-table
+        title="List Of Pending Appointments"
+        :data="patientAppointment"
+        :columns="columns"
+        row-key="RecNo"
+      >
+        <template slot="col-action" scope="row">
+          <q-btn flat label="Cancel" color="primary"></q-btn>
+      </template>
+      </q-table>
+    </div>
+    <div class="q-px-md q-py-sm q-gutter-sm text-center">
+      <q-btn color="primary" label="Make New Appointment" no-caps @click="$router.push('/schedule')"/>
+    </div>
   </div>
+  
 </template>
 
 <script lang="ts">
@@ -25,7 +35,7 @@ export default class PatientAppointment extends Vue {
       field: (row: any) => {
         console.log('row coming', row);
         // tslint:disable-next-line:radix
-        const value = date.formatDate(parseInt(row.AppDateTime), 'DD/MM/YY h:mm');
+        const value = date.formatDate(parseInt(row.AppDateTime), 'DD/MM/YY hh:mm');
         return value;
       },
       format: (val: any) => `${val}`,
@@ -41,12 +51,10 @@ export default class PatientAppointment extends Vue {
     },
     { name: 'Facility', label: 'Facility', field: 'FclDesc' },
     { name: 'Appointment Type', label: 'Appointment Type', field: 'AppType' },
-    { name: '',
-      label: '',
+    {
+      name: 'Action',
+      label: 'Action',
       align: 'center',
-      field: (row: any) => row.DctName,
-      format: (val: any) => `${val}`,
-      sortable: false,
     },
   ];
   public patientAppointment = [];
