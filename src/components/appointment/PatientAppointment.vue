@@ -5,10 +5,10 @@
         title="List Of Pending Appointments"
         :data="patientAppointment"
         :columns="columns"
-        row-key="RecNo"
+        row-key="name"
       >
-        <template slot="col-action" scope="row">
-          <q-btn flat label="Cancel" color="primary"></q-btn>
+      <template slot="col-action" slot-scope="props">
+        <q-btn flat label="Cancel" color="primary" @click='CancelClicked(props)'></q-btn>
       </template>
       </q-table>
     </div>
@@ -33,7 +33,6 @@ export default class PatientAppointment extends Vue {
       align: 'left',
       label: 'Date/Time',
       field: (row: any) => {
-        console.log('row coming', row);
         // tslint:disable-next-line:radix
         const value = date.formatDate(parseInt(row.AppDateTime), 'DD/MM/YY hh:mm');
         return value;
@@ -52,8 +51,8 @@ export default class PatientAppointment extends Vue {
     { name: 'Facility', label: 'Facility', field: 'FclDesc' },
     { name: 'Appointment Type', label: 'Appointment Type', field: 'AppType' },
     {
-      name: 'Action',
-      label: 'Action',
+      label: '',
+      field: 'action',
       align: 'center',
     },
   ];
@@ -61,6 +60,10 @@ export default class PatientAppointment extends Vue {
   public connection = {};
   public path = '';
   public PatId = {};
+
+  public CancelClicked(row: any) {
+    console.log('hellooo its working', row);
+  }
 
   public created() {
     this.connection = this.$store.state.connectionString;

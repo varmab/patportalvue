@@ -1,5 +1,5 @@
 <template>
-  <q-card class="my-card">
+  <q-card class="my-card q-pa-md">
     <q-card-section>
       <q-card-section>
         <div class="q-table__title">Schedule New Appointment</div>
