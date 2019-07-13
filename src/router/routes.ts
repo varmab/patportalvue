@@ -6,6 +6,7 @@ const routes: RouteConfig[] = [
     component: () => import('layouts/PatPortalLayout.vue'),
     children: [
       { path: ':connection/:PatId', component: () => import('pages/PatientAptPage.vue') },
+      { path: 'schedule', component: () => import('pages/ScheduleAptPage.vue') },
     ],
   },
 ];
