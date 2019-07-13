@@ -114,8 +114,6 @@ export default class ScheduleAptPage extends Vue {
   public appDateTime = '';
   public showApt = false;
   public PatId = {};
-  public slots: any = [];
-  public aptList = [];
   public getAvailableSlots = [];
   public connection = {};
   public path = '';
@@ -167,24 +165,10 @@ export default class ScheduleAptPage extends Vue {
       align: 'center',
     },
   ];
-  public addEvent = false;
-  public contextDay: any = null;
-  public showDateTimeScrollerStart = false;
-  public showDateTimeScrollerEnd = false;
-  public dateTimeStart = '';
-  public dateTimeEnd = '';
-  public intervalMinutes: any = '';
-  public intervalCount: any = '';
-
-  get aptDate() {
-    // tslint:disable-next-line:radix
-    return date.formatDate(parseInt(this.appDateTime), 'MMM DD YYYY, hh:mm A');
-  }
 
   @Watch('date')
   public onChildChanged(val: any, oldVal: any) {
     this.showTimes = false;
-    this.slots.length = 0;
   }
 
   public created() {
