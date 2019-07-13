@@ -86,18 +86,6 @@
         </div>
       </div>
     </q-card-section>
-    <q-dialog v-model="confirm" persistent>
-      <q-card>
-        <q-card-section class="row items-center">
-          <span class="q-ml-sm">Are you sure you want to cancel the current appointment and schedule new appointment?</span>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="No" color="red" v-close-popup @click="showApt = true"/>
-          <q-btn flat label="Sure, Schedule new" color="primary" v-close-popup @click="showSchedule(patientAppointment)"/>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
   </q-card>
 </template>
 

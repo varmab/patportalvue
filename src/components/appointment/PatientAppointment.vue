@@ -8,13 +8,28 @@
         row-key="name"
       >
       <template slot="col-action" slot-scope="props">
-        <q-btn flat label="Cancel" color="primary" @click='CancelClicked(props)'></q-btn>
+        <q-btn flat label="Cancel" color="primary" @click='openCancelDialog(props)'></q-btn>
       </template>
       </q-table>
     </div>
     <div class="q-px-md q-py-sm q-gutter-sm text-center">
       <q-btn color="primary" label="Make New Appointment" no-caps @click="$router.push('/schedule')"/>
     </div>
+    <div class="q-px-md q-py-sm q-gutter-sm text-center">
+      <q-btn flat label="Cancel" color="primary" @click='openCancelDialog(patientAppointment)'></q-btn>
+    </div>
+    <q-dialog v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <span class="q-ml-sm">Are you sure you want to cancel the current appointment and schedule new appointment?</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="No" color="red" v-close-popup @click="showApt = true"/>
+          <q-btn flat label="Sure, Schedule new" color="primary" v-close-popup @click="cancelPatApt()"/>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
   
 </template>
@@ -26,6 +41,8 @@ import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
 
 @Component
 export default class PatientAppointment extends Vue {
+  public cancelApt: any = [];
+  public confirm = false;
   public dateTime = '';
   public columns = [
     {
@@ -60,10 +77,6 @@ export default class PatientAppointment extends Vue {
   public connection = {};
   public path = '';
   public PatId = {};
-
-  public CancelClicked(row: any) {
-    console.log('hellooo its working', row);
-  }
 
   public created() {
     this.connection = this.$store.state.connectionString;
@@ -114,5 +127,53 @@ export default class PatientAppointment extends Vue {
         console.error('error in get patient appointment: ', error);
       });
   }
+
+  public openCancelDialog(appointment: any) {
+    this.cancelApt = appointment;
+    this.confirm = true;
+  }
+
+  public cancelPatApt() {
+    const appointment = this.cancelApt[0];
+    const deleteAptObj = {
+        // tslint:disable-next-line:radix
+        AppDateTime: date.formatDate(parseInt(appointment.AppDateTime), 'YYYY-MM-DD hh:mm:ss'),
+        PatId: appointment.PatId,
+      };
+    // tslint:disable-next-line:no-console
+    console.log('deleteAptObj', deleteAptObj);
+    this.confirm = false;
+    this.$router.push('/schedule');
+    // this.$apollo.mutate({
+    //   // Query
+    //   mutation: gql`mutation ($connection: ConnectionInput, $appointment: DeletePatAptInput) {
+    //     deletePatApt(connection: $connection, appointment: $appointment) {
+    //       message
+    //     }
+    //   }`,
+    //   // Parameters
+    //   variables: {
+    //     appointment: deleteAptObj,
+    //     connection: this.connection,
+    //   },
+    // }).then((data: any) => {
+    //   // this.$q.loading.hide();
+    //   // tslint:disable-next-line:no-console
+    //   console.log('appointment deleted sussessfully', data);
+    //   this.$q.notify({
+    //     color: 'green-4',
+    //     textColor: 'white',
+    //     icon: 'fas fa-check-circle',
+    //     message: 'Appointment created successfully!',
+    //   });
+    //   this.onReset();
+    //   this.$router.push('/schedule');
+    // }).catch((error: any) => {
+    //   this.$q.loading.hide();
+    //   // tslint:disable-next-line:no-console
+    //   console.error('error in api call: ', error);
+    // });
+  }
+
 }
 </script>

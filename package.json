@@ -13,7 +13,7 @@
     "build:pwa": "quasar build -m pwa"
   },
   "dependencies": {
-    "@quasar/extras": "^1.1.4",
+    "@quasar/extras": "^1.2.0",
     "apollo-cache-inmemory": "^1.6.2",
     "apollo-client": "^2.6.3",
     "apollo-link": "^1.2.12",
@@ -26,11 +26,11 @@
     "graphql-tools": "^4.0.5",
     "mssql": "^5.1.0",
     "node-fetch": "^2.6.0",
-    "quasar": "^1.0.3",
+    "quasar": "^1.0.5",
     "vue-apollo": "^3.0.0-rc.1"
   },
   "devDependencies": {
-    "@quasar/app": "^1.0.2",
+    "@quasar/app": "^1.0.4",
     "@quasar/quasar-app-extension-typescript": "^1.0.0-alpha.14",
     "@types/node": "11.9.5"
   },
