@@ -7,16 +7,27 @@
         :columns="columns"
         row-key="name"
       >
-      <template slot="col-action" slot-scope="props">
-        <q-btn flat label="Cancel" color="primary" @click='openCancelDialog(props)'></q-btn>
-      </template>
+      <q-tr slot="body" slot-scope="props" :props="props">
+        <q-td key="Date" :props="props">
+          {{props.row.AppDateTime}}
+        </q-td>
+        <q-td key="Doctor" :props="props">
+          {{props.row.DctName}}
+        </q-td>
+        <q-td key="Facility" :props="props">
+          {{props.row.FclDesc}}
+        </q-td>
+        <q-td key="AppointmentType" :props="props">
+          {{props.row.AppType}}
+        </q-td>
+        <q-td key="Action" :props="props">
+          <q-btn flat label="Cancel" color="primary" @click='openCancelDialog(props.row)'></q-btn>
+        </q-td>
+      </q-tr>
       </q-table>
     </div>
     <div class="q-px-md q-py-sm q-gutter-sm text-center">
       <q-btn color="primary" label="Make New Appointment" no-caps @click="$router.push('/schedule')"/>
-    </div>
-    <div class="q-px-md q-py-sm q-gutter-sm text-center">
-      <q-btn flat label="Cancel" color="primary" @click='openCancelDialog(patientAppointment)'></q-btn>
     </div>
     <q-dialog v-model="confirm" persistent>
       <q-card>
@@ -66,9 +77,9 @@ export default class PatientAppointment extends Vue {
       sortable: false,
     },
     { name: 'Facility', label: 'Facility', field: 'FclDesc' },
-    { name: 'Appointment Type', label: 'Appointment Type', field: 'AppType' },
+    { name: 'AppointmentType', label: 'Appointment Type', field: 'AppType' },
     {
-      label: '',
+      name: 'Action',
       field: 'action',
       align: 'center',
     },
@@ -129,6 +140,7 @@ export default class PatientAppointment extends Vue {
   }
 
   public openCancelDialog(appointment: any) {
+    console.log('appointment', appointment);
     this.cancelApt = appointment;
     this.confirm = true;
   }
