@@ -9,7 +9,7 @@
       >
       <q-tr slot="body" slot-scope="props" :props="props">
         <q-td key="Date" :props="props">
-          {{props.row.AppDateTime}}
+          {{aptDate(props.row.AppDateTime)}}
         </q-td>
         <q-td key="Doctor" :props="props">
           {{props.row.DctName}}
@@ -60,11 +60,7 @@ export default class PatientAppointment extends Vue {
       name: 'Date',
       align: 'left',
       label: 'Date/Time',
-      field: (row: any) => {
-        // tslint:disable-next-line:radix
-        const value = date.formatDate(parseInt(row.AppDateTime), 'DD/MM/YY hh:mm');
-        return value;
-      },
+      field: (row: any) => row.AppDateTime,
       format: (val: any) => `${val}`,
       sortable: true,
     },
@@ -88,6 +84,11 @@ export default class PatientAppointment extends Vue {
   public connection = {};
   public path = '';
   public PatId = {};
+
+  public aptDate(aptDate: any) {
+    // tslint:disable-next-line:radix
+    return date.formatDate(parseInt(aptDate), 'DD/MM/YY hh:mm');
+  }
 
   public created() {
     this.connection = this.$store.state.connectionString;
@@ -140,7 +141,6 @@ export default class PatientAppointment extends Vue {
   }
 
   public openCancelDialog(appointment: any) {
-    console.log('appointment', appointment);
     this.cancelApt = appointment;
     this.confirm = true;
   }
