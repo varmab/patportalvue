@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="q-pa-md">
+    <div class="q-pa-md" v-if="showApt">
       <q-table
         title="List Of Pending Appointments"
         :data="patientAppointment"
@@ -26,7 +26,7 @@
       </q-tr>
       </q-table>
     </div>
-    <div class="q-px-md q-py-sm q-gutter-sm text-center">
+    <div v-else class="q-px-md q-py-sm q-gutter-sm text-center">
       <q-btn color="primary" label="Make New Appointment" no-caps @click="$router.push('/schedule')"/>
     </div>
     <q-dialog v-model="confirm" persistent>
@@ -36,7 +36,7 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="No" color="red" v-close-popup @click="showApt = true"/>
+          <q-btn flat label="No" color="red" v-close-popup />
           <q-btn flat label="Sure, Schedule new" color="primary" v-close-popup @click="cancelPatApt()"/>
         </q-card-actions>
       </q-card>
@@ -52,6 +52,7 @@ import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
 
 @Component
 export default class PatientAppointment extends Vue {
+  public showApt = true;
   public cancelApt: any = [];
   public confirm = false;
   public dateTime = '';
@@ -128,9 +129,11 @@ export default class PatientAppointment extends Vue {
         const patientAppointment = data.data.patientAppointment;
         this.$q.loading.hide();
         if (patientAppointment.length > 0) {
+          this.showApt = true,
           this.patientAppointment = patientAppointment;
         } else {
-          this.$router.push('/schedule');
+          this.showApt = false;
+          // this.$router.push('/schedule');
         }
       }).catch((error: any) => {
         this.$q.loading.hide();
@@ -155,7 +158,7 @@ export default class PatientAppointment extends Vue {
     console.log('deleteAptObj', deleteAptObj);
     this.confirm = false;
     this.$q.loading.show({
-      message: 'Cancelling your next appointment',
+      message: 'Cancelling appointment',
     });
     this.$apollo.mutate({
       // Query

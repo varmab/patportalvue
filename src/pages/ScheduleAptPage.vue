@@ -1,138 +1,106 @@
 <template>
-  <q-card class="my-card q-pa-md">
-    <q-card-section>
+  <div>
+    <q-card class="my-card q-pa-md">
       <q-card-section>
-        <div class="q-table__title">Schedule New Appointment</div>
-      </q-card-section>
-      <div class="q-pa-md q-pa-0">
-        <div class="row">
-          <div class="margin-auto">
-            <div class="q-pa-xs" style="max-width: 400px">
-              <q-form
-                @submit="onSubmit"
-                @reset="onReset"
-                class="q-gutter-md"
-              >
-                <q-input
-                  v-model="date"
-                  mask="date"
-                  :rules="[ val => val && val.length > 0 || 'Please select date' ]"
+        <q-card-section>
+          <div class="q-table__title">Schedule New Appointment</div>
+        </q-card-section>
+        <div class="q-pa-md q-pa-0">
+          <div class="row">
+            <div class="margin-auto">
+              <div class="q-pa-xs" style="max-width: 400px">
+                <q-form
+                  @submit="onSubmit"
+                  @reset="onReset"
+                  class="q-gutter-md"
                 >
-                  <template v-slot:append>
-                    <q-icon name="event" class="cursor-pointer">
-                      <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                        <q-date v-model="date" @input="() => $refs.qDateProxy.hide()" />
-                      </q-popup-proxy>
-                    </q-icon>
-                  </template>
-                </q-input>
-                <div class="col-12">
-                  <q-btn-dropdown class="btn-full-width three-dots" :label="DctName" no-caps>
-                    <q-list v-for="doctor in allDoctors" :key="doctor.DctId">
-                      <q-item clickable v-close-popup @click="selectDoctor(doctor)">
-                        <q-item-section>
-                          <q-item-label class="three-dots">{{doctor.DctName}}</q-item-label>
-                        </q-item-section>
-                      </q-item>
-                    </q-list>
-                  </q-btn-dropdown>
-                  <div class="customErr" v-if="doctorErr">Please select Doctor</div>
-                </div>
-                <div class="col-12">
-                  <q-btn-dropdown class="btn-full-width three-dots" :label="FclDesc" no-caps>
-                    <q-list v-for="facility in allFacilities" :key="facility.FclId">
-                      <q-item clickable v-close-popup @click="selectFacility(facility)">
-                        <q-item-section>
-                          <q-item-label class="three-dots">{{facility.FclDesc}}</q-item-label>
-                        </q-item-section>
-                      </q-item>
-                    </q-list>
-                  </q-btn-dropdown>
-                  <div class="customErr" v-if="facilityErr">Please select Facility</div>
-                </div>
-                <div class="col-12">
-                  <q-btn-dropdown class="btn-full-width three-dots" :label="Type" no-caps>
-                    <q-list v-for="ftype in allAppointmentTypes" :key="ftype.RecNo">
-                      <q-item clickable v-close-popup @click="selectType(ftype)">
-                        <q-item-section>
-                          <q-item-label class="three-dots">{{ftype.Type}}</q-item-label>
-                        </q-item-section>
-                      </q-item>
-                    </q-list>
-                  </q-btn-dropdown>
-                  <div class="customErr" v-if="typeErr">Please select Appointment Type</div>
-                </div>
+                  <q-input
+                    v-model="date"
+                    mask="date"
+                    :rules="[ val => val && val.length > 0 || 'Please select date' ]"
+                  >
+                    <template v-slot:append>
+                      <q-icon name="event" class="cursor-pointer">
+                        <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
+                          <q-date v-model="date" @input="() => $refs.qDateProxy.hide()" />
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input>
+                  <div class="col-12">
+                    <q-btn-dropdown class="btn-full-width three-dots" :label="DctName" no-caps>
+                      <q-list v-for="doctor in allDoctors" :key="doctor.DctId">
+                        <q-item clickable v-close-popup @click="selectDoctor(doctor)">
+                          <q-item-section>
+                            <q-item-label class="three-dots">{{doctor.DctName}}</q-item-label>
+                          </q-item-section>
+                        </q-item>
+                      </q-list>
+                    </q-btn-dropdown>
+                    <div class="customErr" v-if="doctorErr">Please select Doctor</div>
+                  </div>
+                  <div class="col-12">
+                    <q-btn-dropdown class="btn-full-width three-dots" :label="FclDesc" no-caps>
+                      <q-list v-for="facility in allFacilities" :key="facility.FclId">
+                        <q-item clickable v-close-popup @click="selectFacility(facility)">
+                          <q-item-section>
+                            <q-item-label class="three-dots">{{facility.FclDesc}}</q-item-label>
+                          </q-item-section>
+                        </q-item>
+                      </q-list>
+                    </q-btn-dropdown>
+                    <div class="customErr" v-if="facilityErr">Please select Facility</div>
+                  </div>
+                  <div class="col-12">
+                    <q-btn-dropdown class="btn-full-width three-dots" :label="Type" no-caps>
+                      <q-list v-for="ftype in allAppointmentTypes" :key="ftype.RecNo">
+                        <q-item clickable v-close-popup @click="selectType(ftype)">
+                          <q-item-section>
+                            <q-item-label class="three-dots">{{ftype.Type}}</q-item-label>
+                          </q-item-section>
+                        </q-item>
+                      </q-list>
+                    </q-btn-dropdown>
+                    <div class="customErr" v-if="typeErr">Please select Appointment Type</div>
+                  </div>
 
-                <div>
-                  <q-btn label="Submit" type="submit" color="primary"/>
-                  <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
-                </div>
-              </q-form>
+                  <div>
+                    <q-btn label="Submit" type="submit" color="primary"/>
+                    <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
+                  </div>
+                </q-form>
 
+              </div>
             </div>
-          </div>
-          <div v-if="showTimes" class="margin-auto q-pa-md col-xs-12 col-sm-12 col-md-8">
-            <q-table
-              title="List Of Available Appointments"
-              :data="getAvailableSlots"
-              :columns="columns"
-              row-key="RecNo"
-            >
-              <q-tr slot="body" slot-scope="props" :props="props">
-                <q-td key="Date" :props="props">
-                  {{aptDate(props.row.appDateTime)}}
-                </q-td>
-                <q-td key="Facility" :props="props">
-                  {{props.row.FclDesc}}
-                </q-td>
-                <q-td key="AppointmentType" :props="props">
-                  {{props.row.AppType}}
-                </q-td>
-                <q-td key="Action" :props="props">
-                  <q-btn flat label="Select" color="primary" @click='openCreateDialog(props.row)'></q-btn>
-                </q-td>
-              </q-tr>
-            </q-table>
+            <div v-if="showTimes" class="margin-auto q-pa-md col-xs-12 col-sm-12 col-md-8">
+              <q-table
+                title="List Of Available Appointments"
+                :data="getAvailableSlots"
+                :columns="columns"
+                row-key="RecNo"
+              >
+                <q-tr slot="body" slot-scope="props" :props="props">
+                  <q-td key="Date" :props="props">
+                    {{aptDate(props.row.appDateTime)}}
+                  </q-td>
+                  <q-td key="Facility" :props="props">
+                    {{props.row.FclDesc}}
+                  </q-td>
+                  <q-td key="AppointmentType" :props="props">
+                    {{props.row.AppType}}
+                  </q-td>
+                  <q-td key="Action" :props="props">
+                    <q-btn flat label="Select" color="primary" @click='openCreateDialog(props.row)'></q-btn>
+                  </q-td>
+                </q-tr>
+              </q-table>
+            </div>
           </div>
         </div>
-      </div>
-    </q-card-section>
-    <q-dialog v-model="createAptDialog" no-backdrop-dismiss>
-      <q-card v-if="createAptDialog" style="width: 400px;">
-        <q-toolbar class="bg-primary text-white">
-          <q-toolbar-title>
-            Create Appointment
-          </q-toolbar-title>
-          <q-btn flat round color="white" icon="close" v-close-popup></q-btn>
-        </q-toolbar>
-        <q-card-section class="inset-shadow">
-          <q-form
-            ref='event'
-            class="q-gutter-md"
-          >
-            <div class="q-gutter-sm">
-               <div>
-                <span class="three-dots"><span class="text-weight-light">Doctor: </span> {{DctName}}</span>
-              </div>
-              <div>
-                <span class="three-dots"><span class="text-weight-light">Facility: </span> {{FclDesc}}</span>
-              </div>
-              <div>
-                <span class="three-dots"><span class="text-weight-light">AppointmentType: </span> {{Type}}</span>
-              </div>
-              <div>
-                <span class="three-dots"><span class="text-weight-light">Date/Time: </span> {{appDateTime}}</span>
-              </div>
-            </div>
-          </q-form>
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Create" color="green" @click="createAppointment(createObj)"></q-btn>
-          <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-  </q-card>
+      </q-card-section>
+    </q-card>
+    <CreateDialog v-bind:createAptDialog="createAptDialog" v-bind:DctName="DctName" v-bind:FclDesc="FclDesc" v-bind:Type="Type" v-bind:appDateTime="appDateTime" @closeCreate="closeCreate" @createAppointment="createAppointment(createObj)"/>
+  </div>
 </template>
 
 <script lang="ts">
@@ -140,8 +108,13 @@ import gql from 'graphql-tag';
 import { date } from 'quasar';
 import { Key } from 'readline';
 import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
+import CreateDialog from '../components/appointment/CreateDialog.vue';
 
-@Component
+@Component({
+  components: {
+    CreateDialog,
+  },
+})
 export default class ScheduleAptPage extends Vue {
   public createAptDialog = false;
   public createObj: any = {};
@@ -375,7 +348,13 @@ export default class ScheduleAptPage extends Vue {
     this.createObj = appointment;
   }
 
+  public closeCreate() {
+    console.log('close called');
+    this.createAptDialog = false;
+  }
+
   public createAppointment(appointment: any) {
+    console.log('creted called', appointment);
     this.createAptDialog = false;
     this.$q.loading.show({
       message: 'Creating your appointment',
