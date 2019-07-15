@@ -97,7 +97,7 @@ export default class PatientAppointment extends Vue {
   }
 
   public mounted() {
-     this.getPatApt();
+    this.getPatApt();
   }
 
   public getPatApt() {
@@ -183,7 +183,7 @@ export default class PatientAppointment extends Vue {
     }).catch((error: any) => {
       this.$q.loading.hide();
       // tslint:disable-next-line:no-console
-      console.error('error in api call: ', error);
+      console.error('error in delete apt apt api call: ', error);
     });
   }
 

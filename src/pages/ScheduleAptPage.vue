@@ -89,7 +89,7 @@
                   {{props.row.AppType}}
                 </q-td>
                 <q-td key="Action" :props="props">
-                  <q-btn flat label="Select" color="primary" @click='createAppointment(props.row)'></q-btn>
+                  <q-btn flat label="Select" color="primary" @click='openCreateDialog(props.row)'></q-btn>
                 </q-td>
               </q-tr>
             </q-table>
@@ -97,6 +97,41 @@
         </div>
       </div>
     </q-card-section>
+    <q-dialog v-model="createAptDialog" no-backdrop-dismiss>
+      <q-card v-if="createAptDialog" style="width: 400px;">
+        <q-toolbar class="bg-primary text-white">
+          <q-toolbar-title>
+            Create Appointment
+          </q-toolbar-title>
+          <q-btn flat round color="white" icon="close" v-close-popup></q-btn>
+        </q-toolbar>
+        <q-card-section class="inset-shadow">
+          <q-form
+            ref='event'
+            class="q-gutter-md"
+          >
+            <div class="q-gutter-sm">
+               <div>
+                <span class="three-dots"><span class="text-weight-light">Doctor: </span> {{DctName}}</span>
+              </div>
+              <div>
+                <span class="three-dots"><span class="text-weight-light">Facility: </span> {{FclDesc}}</span>
+              </div>
+              <div>
+                <span class="three-dots"><span class="text-weight-light">Apt Type: </span> {{Type}}</span>
+              </div>
+              <div>
+                <span class="three-dots"><span class="text-weight-light">Date/Time: </span> {{appDateTime}}</span>
+              </div>
+            </div>
+          </q-form>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="OK" color="primary" @click="createAppointment(createObj)"></q-btn>
+          <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-card>
 </template>
 
@@ -108,8 +143,8 @@ import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
 
 @Component
 export default class ScheduleAptPage extends Vue {
-  public confirm = false;
-  public patientAppointment: any = [];
+  public createAptDialog = false;
+  public createObj: any = {};
   public appDateTime = '';
   public showApt = false;
   public PatId = {};
@@ -320,15 +355,14 @@ export default class ScheduleAptPage extends Vue {
     }
   }
 
-  public createAppointment(apt: any) {
-    this.$q.loading.show({
-      message: 'Creating your appointment',
-    });
+  public openCreateDialog(apt: any) {
+    this.createAptDialog = true;
     // tslint:disable-next-line:radix
     const selectedDate = date.formatDate(parseInt(apt.appDateTime), 'YYYY-MM-DD');
     // tslint:disable-next-line:radix
     const selectedTime = date.formatDate(parseInt(apt.appDateTime), 'hh:mm:ss');
     const modifiedDate =  selectedDate + ' ' + selectedTime;
+    this.appDateTime = modifiedDate;
     const appointment = {
       PatId: this.$store.state.PatId.PatId,
       PatName: '',
@@ -336,9 +370,16 @@ export default class ScheduleAptPage extends Vue {
       DctId: this.DctId,
       Duration: 15,
       AppType: this.Type,
-      AppDateTime: modifiedDate,
+      AppDateTime: this.appDateTime,
     };
-    const connectionDetails = this.$store.state.connectionString;
+    this.createObj = appointment;
+  }
+
+  public createAppointment(appointment: any) {
+    this.createAptDialog = false;
+    this.$q.loading.show({
+      message: 'Creating your appointment',
+    });
     // tslint:disable-next-line:no-console
     console.log('create appointment object: ', appointment);
     this.$apollo.mutate({
@@ -360,7 +401,7 @@ export default class ScheduleAptPage extends Vue {
       // Parameters
       variables: {
         appointment,
-        connection: connectionDetails,
+        connection: this.connection,
       },
     }).then((data: any) => {
       // this.$q.loading.hide();
@@ -377,11 +418,11 @@ export default class ScheduleAptPage extends Vue {
     }).catch((error: any) => {
       this.$q.loading.hide();
       // tslint:disable-next-line:no-console
-      console.error('error in api call: ', error);
+      console.error('error in create: ', error);
     });
   }
   public onReset() {
-    this.confirm = false;
+    this.createAptDialog = false;
     this.showApt = false;
     this.showTimes = false;
     this.date = date.formatDate(Date.now(), 'YYYY-MM-DD');
