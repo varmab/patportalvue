@@ -81,7 +81,10 @@ module.exports = function (ctx) {
         'Meta',
         'Cookies',
         'Loading'
-      ]
+      ],
+      config: {
+        loading: { /* Loading defaults */ }
+      }
 
       // iconSet: 'ionicons-v4'
       // lang: 'de' // Quasar language

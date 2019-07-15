@@ -127,11 +127,10 @@ export default class PatientAppointment extends Vue {
     }).then((data: any) => {
         const patientAppointment = data.data.patientAppointment;
         this.$q.loading.hide();
-        if (patientAppointment.length) {
+        if (patientAppointment.length > 0) {
           this.patientAppointment = patientAppointment;
-          // this.appDateTime = patientAppointment[0].AppDateTime;
         } else {
-          // this.$router.push()
+          this.$router.push('/schedule');
         }
       }).catch((error: any) => {
         this.$q.loading.hide();
@@ -141,17 +140,19 @@ export default class PatientAppointment extends Vue {
   }
 
   public openCancelDialog(appointment: any) {
+    console.log('dialog', appointment);
     this.cancelApt = appointment;
+    console.log('openCancelDialog -> cancelApt', this.cancelApt);
     this.confirm = true;
   }
 
   public cancelPatApt() {
-    const appointment = this.cancelApt[0];
+    const appointment = this.cancelApt;
     const deleteAptObj = {
         // tslint:disable-next-line:radix
-        AppDateTime: date.formatDate(parseInt(appointment.AppDateTime), 'YYYY-MM-DD hh:mm:ss'),
-        PatId: appointment.PatId,
-      };
+      AppDateTime: date.formatDate(parseInt(appointment.AppDateTime), 'YYYY-MM-DD hh:mm:ss'),
+      PatId: appointment.PatId,
+    };
     // tslint:disable-next-line:no-console
     console.log('deleteAptObj', deleteAptObj);
     this.confirm = false;
