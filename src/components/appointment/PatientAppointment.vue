@@ -154,36 +154,37 @@ export default class PatientAppointment extends Vue {
     // tslint:disable-next-line:no-console
     console.log('deleteAptObj', deleteAptObj);
     this.confirm = false;
-    this.$router.push('/schedule');
-    // this.$apollo.mutate({
-    //   // Query
-    //   mutation: gql`mutation ($connection: ConnectionInput, $appointment: DeletePatAptInput) {
-    //     deletePatApt(connection: $connection, appointment: $appointment) {
-    //       message
-    //     }
-    //   }`,
-    //   // Parameters
-    //   variables: {
-    //     appointment: deleteAptObj,
-    //     connection: this.connection,
-    //   },
-    // }).then((data: any) => {
-    //   // this.$q.loading.hide();
-    //   // tslint:disable-next-line:no-console
-    //   console.log('appointment deleted sussessfully', data);
-    //   this.$q.notify({
-    //     color: 'green-4',
-    //     textColor: 'white',
-    //     icon: 'fas fa-check-circle',
-    //     message: 'Appointment created successfully!',
-    //   });
-    //   this.onReset();
-    //   this.$router.push('/schedule');
-    // }).catch((error: any) => {
-    //   this.$q.loading.hide();
-    //   // tslint:disable-next-line:no-console
-    //   console.error('error in api call: ', error);
-    // });
+    this.$q.loading.show({
+      message: 'Cancelling your next appointment',
+    });
+    this.$apollo.mutate({
+      // Query
+      mutation: gql`mutation ($connection: ConnectionInput, $appointment: DeletePatAptInput) {
+        deletePatApt(connection: $connection, appointment: $appointment) {
+          message
+        }
+      }`,
+      // Parameters
+      variables: {
+        appointment: deleteAptObj,
+        connection: this.connection,
+      },
+    }).then((data: any) => {
+      this.$q.loading.hide();
+      // tslint:disable-next-line:no-console
+      console.log('appointment deleted sussessfully', data);
+      this.$q.notify({
+        color: 'green-4',
+        textColor: 'white',
+        icon: 'fas fa-check-circle',
+        message: 'Appointment Cancelled successfully!',
+      });
+      this.$router.push('/schedule');
+    }).catch((error: any) => {
+      this.$q.loading.hide();
+      // tslint:disable-next-line:no-console
+      console.error('error in api call: ', error);
+    });
   }
 
 }

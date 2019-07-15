@@ -73,10 +73,10 @@
           </div>
           <div v-if="showTimes" class="margin-auto q-pa-md col-xs-12 col-sm-12 col-md-8">
             <q-table
-                title="List Of Available Appointments"
-                :data="getAvailableSlots"
-                :columns="columns"
-                row-key="RecNo"
+              title="List Of Available Appointments"
+              :data="getAvailableSlots"
+              :columns="columns"
+              row-key="RecNo"
             >
               <q-tr slot="body" slot-scope="props" :props="props">
                 <q-td key="Date" :props="props">
