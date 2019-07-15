@@ -71,16 +71,27 @@
 
             </div>
           </div>
-          <div v-if="showTimes" class="margin-auto col-xs-12 col-sm-8 col-md-6">
+          <div v-if="showTimes" class="margin-auto q-pa-md col-xs-12 col-sm-12 col-md-8">
             <q-table
                 title="List Of Available Appointments"
                 :data="getAvailableSlots"
                 :columns="columns"
                 row-key="RecNo"
             >
-             <template slot="col-action" scope="row">
-                <q-btn flat label="Cancel" color="primary"></q-btn>
-            </template>
+              <q-tr slot="body" slot-scope="props" :props="props">
+                <q-td key="Date" :props="props">
+                  {{aptDate(props.row.appDateTime)}}
+                </q-td>
+                <q-td key="Facility" :props="props">
+                  {{props.row.FclDesc}}
+                </q-td>
+                <q-td key="AppointmentType" :props="props">
+                  {{props.row.AppType}}
+                </q-td>
+                <q-td key="Action" :props="props">
+                  <q-btn flat label="Select" color="primary" @click='createAppointment(props.row)'></q-btn>
+                </q-td>
+              </q-tr>
             </q-table>
           </div>
         </div>
@@ -124,12 +135,7 @@ export default class ScheduleAptPage extends Vue {
       name: 'Date',
       align: 'left',
       label: 'Date/Time',
-      field: (row: any) => {
-        console.log('row coming', row);
-        // tslint:disable-next-line:radix
-        const value = date.formatDate(parseInt(row.appDateTime), 'DD/MM/YY hh:mm');
-        return value;
-      },
+      field: (row: any) => row.appDateTime,
       format: (val: any) => `${val}`,
       sortable: true,
     },
@@ -140,7 +146,7 @@ export default class ScheduleAptPage extends Vue {
       format: (val: any) => `${val}`,
       sortable: false,
     },
-    { name: 'Appointment Type',
+    { name: 'AppointmentType',
       label: 'Appointment Type',
       align: 'center',
       field: (row: any) => row.AppType ? row.AppType : '',
@@ -157,6 +163,11 @@ export default class ScheduleAptPage extends Vue {
   @Watch('date')
   public onChildChanged(val: any, oldVal: any) {
     this.showTimes = false;
+  }
+
+  public aptDate(aptDate: any) {
+    // tslint:disable-next-line:radix
+    return date.formatDate(parseInt(aptDate), 'DD/MM/YY hh:mm');
   }
 
   public created() {
@@ -259,56 +270,6 @@ export default class ScheduleAptPage extends Vue {
     this.Type = type.Type;
   }
 
-  public showSchedule(appointment: any) {
-      const connectionDetails = this.$store.state.connectionString;
-      const deleteAptObj = {
-        // tslint:disable-next-line:radix
-        AppDateTime: date.formatDate(parseInt(appointment.AppDateTime), 'YYYY-MM-DD hh:mm:ss'),
-        PatId: appointment.PatId,
-      };
-      console.log('deleteAptObj', deleteAptObj);
-    //   this.$apollo.mutate({
-    //   // Query
-    //   mutation: gql`mutation ($connection: ConnectionInput, $appointment: DeletePatAptInput) {
-    //     deletePatApt(connection: $connection, appointment: $appointment) {
-    //       message
-    //     }
-    //   }`,
-    //   // Parameters
-    //   variables: {
-    //     appointment: deleteAptObj,
-    //     connection: connectionDetails,
-    //   },
-    // }).then((data: any) => {
-    //   // this.$q.loading.hide();
-    //   // tslint:disable-next-line:no-console
-    //   console.log('appointment created sussessfully', data);
-    //   this.$q.notify({
-    //     color: 'green-4',
-    //     textColor: 'white',
-    //     icon: 'fas fa-check-circle',
-    //     message: 'Appointment created successfully!',
-    //   });
-    //   this.onReset();
-    //   this.$router.push(`${this.path}`);
-    // }).catch((error: any) => {
-    //   this.$q.loading.hide();
-    //   // tslint:disable-next-line:no-console
-    //   console.error('error in api call: ', error);
-    // });
-    // tslint:disable-next-line:no-console
-      console.log('appointment coming', appointment);
-      this.showApt = !this.showApt;
-    // tslint:disable-next-line:radix
-      this.date = date.formatDate(Date.now(), 'YYYY/MM/DD');
-      this.DctId = '';
-      this.DctName = 'Select Doctor';
-      this.FclId = '';
-      this.FclDesc = 'Select Facility';
-      this.Type = 'Select Appointment Type';
-      this.RecNo = '';
-  }
-
   public onSubmit() {
     if (this.DctName === 'Select Doctor') {
       this.doctorErr = true;
@@ -326,7 +287,6 @@ export default class ScheduleAptPage extends Vue {
         FclId: this.FclId,
         AppType: this.Type,
       };
-      console.log('OnSubmit -> availSlots', availSlots);
       this.$q.loading.show({
         message: 'Please wait loading available slots.',
       });
@@ -344,25 +304,12 @@ export default class ScheduleAptPage extends Vue {
         },
       }).then((data: any) => {
         this.getAvailableSlots = data.data.getAvailableSlots;
-        console.log('slotssss', this.getAvailableSlots);
         this.$q.loading.hide();
       }).catch((error: any) => {
           this.$q.loading.hide();
           // tslint:disable-next-line:no-console
           console.error('error in get all doctors: ', error);
       });
-      // this.aptList.map((apt: any, key: any) => {
-      //   const bookedSlot: any = {};
-      //   const selectedDate = date.formatDate(this.date, 'MMM DD YYYY');
-      //   // tslint:disable-next-line:radix
-      //   const AptDate = date.formatDate(parseInt(apt.AppDateTime), 'MMM DD YYYY');
-      //   // tslint:disable-next-line:radix
-      //   const AptTime = date.formatDate(parseInt(apt.AppDateTime), 'hh:mm A');
-      //   if (selectedDate === AptDate) {
-      //     bookedSlot.time = AptTime;
-      //     this.slots.push(bookedSlot);
-      //   }
-      // });
       this.showTimes = true;
       this.$q.notify({
         color: 'green-4',
@@ -373,65 +320,65 @@ export default class ScheduleAptPage extends Vue {
     }
   }
 
-  public createAppointment(time: any) {
-    console.log('createAppointment -> time', time);
-    // this.$q.loading.show({
-    //   message: 'Creating appointment your appointment',
-    // });
-    const selectedDate = date.formatDate(this.date, 'YYYY-MM-DD');
-    const selectedTime = date.formatDate(time, 'hh:mm:ss');
+  public createAppointment(apt: any) {
+    this.$q.loading.show({
+      message: 'Creating your appointment',
+    });
+    // tslint:disable-next-line:radix
+    const selectedDate = date.formatDate(parseInt(apt.appDateTime), 'YYYY-MM-DD');
+    // tslint:disable-next-line:radix
+    const selectedTime = date.formatDate(parseInt(apt.appDateTime), 'hh:mm:ss');
     const modifiedDate =  selectedDate + ' ' + selectedTime;
-    console.log('AppDateTime', modifiedDate);
     const appointment = {
       PatId: this.$store.state.PatId.PatId,
-      PatName: 'XYZ',
+      PatName: '',
       FclId: this.FclId,
       DctId: this.DctId,
-      Duration: 60,
+      Duration: 15,
       AppType: this.Type,
       AppDateTime: modifiedDate,
     };
     const connectionDetails = this.$store.state.connectionString;
     // tslint:disable-next-line:no-console
     console.log('create appointment object: ', appointment);
-    // this.$apollo.mutate({
-    //   // Query
-    //   mutation: gql`mutation ($connection: ConnectionInput, $appointment: AppointmentInput) {
-    //     createAppointment(connection: $connection, appointment: $appointment) {
-    //       RecNo
-    //       PatId
-    //       DctId
-    //       DctName
-    //       FclDesc
-    //       FclId
-    //       Duration
-    //       AppType
-    //       AppDateTime
-    //       EntryDateTime
-    //     }
-    //   }`,
-    //   // Parameters
-    //   variables: {
-    //     appointment,
-    //     connection: connectionDetails,
-    //   },
-    // }).then((data: any) => {
-    //   // this.$q.loading.hide();
-    //   // tslint:disable-next-line:no-console
-    //   console.log('appointment created sussessfully', data);
-    //   this.$q.notify({
-    //     color: 'green-4',
-    //     textColor: 'white',
-    //     icon: 'fas fa-check-circle',
-    //     message: 'Appointment created successfully!',
-    //   });
-    //   this.onReset();
-    //   this.$router.push(`${this.path}`);
-    // }).catch((error: any) => {
-    //   this.$q.loading.hide();
-    //   // tslint:disable-next-line:no-console
-    //   console.error('error in api call: ', error);
-    // });
+    this.$apollo.mutate({
+      // Query
+      mutation: gql`mutation ($connection: ConnectionInput, $appointment: AppointmentInput) {
+        createAppointment(connection: $connection, appointment: $appointment) {
+          RecNo
+          PatId
+          DctId
+          DctName
+          FclDesc
+          FclId
+          Duration
+          AppType
+          AppDateTime
+          EntryDateTime
+        }
+      }`,
+      // Parameters
+      variables: {
+        appointment,
+        connection: connectionDetails,
+      },
+    }).then((data: any) => {
+      // this.$q.loading.hide();
+      // tslint:disable-next-line:no-console
+      console.log('appointment created sussessfully', data);
+      this.$q.notify({
+        color: 'green-4',
+        textColor: 'white',
+        icon: 'fas fa-check-circle',
+        message: 'Appointment created successfully!',
+      });
+      this.onReset();
+      this.$router.push(`${this.path}`);
+    }).catch((error: any) => {
+      this.$q.loading.hide();
+      // tslint:disable-next-line:no-console
+      console.error('error in api call: ', error);
+    });
   }
   public onReset() {
     this.confirm = false;

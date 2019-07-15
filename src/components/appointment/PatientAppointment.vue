@@ -140,9 +140,7 @@ export default class PatientAppointment extends Vue {
   }
 
   public openCancelDialog(appointment: any) {
-    console.log('dialog', appointment);
     this.cancelApt = appointment;
-    console.log('openCancelDialog -> cancelApt', this.cancelApt);
     this.confirm = true;
   }
 
