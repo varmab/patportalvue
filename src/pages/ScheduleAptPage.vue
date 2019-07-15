@@ -118,7 +118,7 @@
                 <span class="three-dots"><span class="text-weight-light">Facility: </span> {{FclDesc}}</span>
               </div>
               <div>
-                <span class="three-dots"><span class="text-weight-light">Apt Type: </span> {{Type}}</span>
+                <span class="three-dots"><span class="text-weight-light">AppointmentType: </span> {{Type}}</span>
               </div>
               <div>
                 <span class="three-dots"><span class="text-weight-light">Date/Time: </span> {{appDateTime}}</span>
@@ -127,7 +127,7 @@
           </q-form>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat label="OK" color="primary" @click="createAppointment(createObj)"></q-btn>
+          <q-btn flat label="Create" color="green" @click="createAppointment(createObj)"></q-btn>
           <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
         </q-card-actions>
       </q-card>
