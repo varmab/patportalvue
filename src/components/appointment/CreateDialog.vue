@@ -23,7 +23,7 @@
                             <span class="three-dots"><span class="text-weight-light">AppointmentType: </span> {{Type}}</span>
                         </div>
                         <div>
-                            <span class="three-dots"><span class="text-weight-light">Date/Time: </span> {{appDateTime}}</span>
+                            <span class="three-dots"><span class="text-weight-light">Date/Time: </span> {{aptDate(appDateTime)}}</span>
                         </div>
                     </div>
                 </q-form>
@@ -37,6 +37,7 @@
 </template>
 
 <script lang="ts">
+import { date } from 'quasar';
 import { Component, Mixins, Prop, Vue } from 'vue-property-decorator';
 
 @Component
@@ -52,5 +53,9 @@ export default class CreateDailog extends Vue {
     public closeCreate(value: any) {
         this.$emit('closeCreate', value);
     }
+    public aptDate(aptDate: any) {
+    // tslint:disable-next-line:radix
+    return date.formatDate(aptDate, 'DD/MM/YY hh:mm');
+  }
 }
 </script>

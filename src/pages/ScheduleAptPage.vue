@@ -80,6 +80,9 @@
                 row-key="RecNo"
               >
                 <q-tr slot="body" slot-scope="props" :props="props">
+                  <q-td key="Action" :props="props">
+                    <q-btn flat label="Select" color="primary" @click='openCreateDialog(props.row)'></q-btn>
+                  </q-td>
                   <q-td key="Date" :props="props">
                     {{aptDate(props.row.appDateTime)}}
                   </q-td>
@@ -88,9 +91,6 @@
                   </q-td>
                   <q-td key="AppointmentType" :props="props">
                     {{props.row.AppType}}
-                  </q-td>
-                  <q-td key="Action" :props="props">
-                    <q-btn flat label="Select" color="primary" @click='openCreateDialog(props.row)'></q-btn>
                   </q-td>
                 </q-tr>
               </q-table>
@@ -140,6 +140,11 @@ export default class ScheduleAptPage extends Vue {
   public allAppointmentTypes = [];
   public columns = [
     {
+      name: 'Action',
+      label: 'Action',
+      align: 'center',
+    },
+    {
       name: 'Date',
       align: 'left',
       label: 'Date/Time',
@@ -160,11 +165,6 @@ export default class ScheduleAptPage extends Vue {
       field: (row: any) => row.AppType ? row.AppType : '',
       format: (val: any) => `${val}`,
       sortable: false,
-    },
-    {
-      name: 'Action',
-      label: 'Action',
-      align: 'center',
     },
   ];
 
