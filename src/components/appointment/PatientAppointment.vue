@@ -26,7 +26,7 @@
       </q-tr>
       </q-table>
     </div>
-    <div v-else class="q-px-md q-py-sm q-gutter-sm text-center">
+    <div class="q-px-md q-py-sm q-gutter-sm text-center">
       <q-btn color="primary" label="Make New Appointment" no-caps @click="$router.push('/schedule')"/>
     </div>
     <q-dialog v-model="confirm" persistent>
@@ -132,8 +132,14 @@ export default class PatientAppointment extends Vue {
           this.showApt = true,
           this.patientAppointment = patientAppointment;
         } else {
-          this.showApt = false;
-          // this.$router.push('/schedule');
+          // this.showApt = false;
+          this.$router.push('/schedule');
+          this.$q.notify({
+            color: 'green-4',
+            textColor: 'white',
+            icon: 'fas fa-check-circle',
+            message: 'You donot have any pending appointments',
+          });
         }
       }).catch((error: any) => {
         this.$q.loading.hide();
@@ -182,7 +188,8 @@ export default class PatientAppointment extends Vue {
         icon: 'fas fa-check-circle',
         message: 'Appointment Cancelled successfully!',
       });
-      this.$router.push('/schedule');
+      this.showApt = false;
+      // this.$router.push('/schedule');
     }).catch((error: any) => {
       this.$q.loading.hide();
       // tslint:disable-next-line:no-console
