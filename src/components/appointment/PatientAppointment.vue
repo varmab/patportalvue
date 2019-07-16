@@ -8,6 +8,9 @@
         row-key="name"
       >
       <q-tr slot="body" slot-scope="props" :props="props">
+        <q-td key="Action" :props="props">
+          <q-btn flat label="Cancel" color="primary" @click='openCancelDialog(props.row)'></q-btn>
+        </q-td>
         <q-td key="Date" :props="props">
           {{aptDate(props.row.AppDateTime)}}
         </q-td>
@@ -19,9 +22,6 @@
         </q-td>
         <q-td key="AppointmentType" :props="props">
           {{props.row.AppType}}
-        </q-td>
-        <q-td key="Action" :props="props">
-          <q-btn flat label="Cancel" color="primary" @click='openCancelDialog(props.row)'></q-btn>
         </q-td>
       </q-tr>
       </q-table>
@@ -58,6 +58,12 @@ export default class PatientAppointment extends Vue {
   public dateTime = '';
   public columns = [
     {
+      label: 'Action',
+      name: 'Action',
+      field: 'action',
+      align: 'center',
+    },
+    {
       name: 'Date',
       align: 'left',
       label: 'Date/Time',
@@ -68,18 +74,13 @@ export default class PatientAppointment extends Vue {
     { name: 'Doctor',
       required: true,
       label: 'Doctor',
-      align: 'center',
+      align: 'left',
       field: (row: any) => row.DctName,
       format: (val: any) => `${val}`,
       sortable: false,
     },
-    { name: 'Facility', label: 'Facility', field: 'FclDesc' },
-    { name: 'AppointmentType', label: 'Appointment Type', field: 'AppType' },
-    {
-      name: 'Action',
-      field: 'action',
-      align: 'center',
-    },
+    { name: 'Facility', label: 'Facility', field: 'FclDesc', align: 'left' },
+    { name: 'AppointmentType', label: 'Appointment Type', field: 'AppType', align: 'left' },
   ];
   public patientAppointment = [];
   public connection = {};
