@@ -73,27 +73,7 @@
               </div>
             </div>
             <div v-if="showTimes" class="margin-auto q-pa-md col-xs-12 col-sm-12 col-md-8">
-              <q-table
-                title="List Of Available Appointments"
-                :data="getAvailableSlots"
-                :columns="columns"
-                row-key="RecNo"
-              >
-                <q-tr slot="body" slot-scope="props" :props="props">
-                  <q-td key="Action" :props="props">
-                    <q-btn flat label="Select" color="primary" @click='openCreateDialog(props.row)'></q-btn>
-                  </q-td>
-                  <q-td key="Date" :props="props">
-                    {{aptDate(props.row.appDateTime)}}
-                  </q-td>
-                  <q-td key="Facility" :props="props">
-                    {{props.row.FclDesc}}
-                  </q-td>
-                  <q-td key="AppointmentType" :props="props">
-                    {{props.row.AppType}}
-                  </q-td>
-                </q-tr>
-              </q-table>
+              <AvailableSlotsTable v-bind:getAvailableSlots="getAvailableSlots" v-bind:columns="columns" @openCreateDialog="openCreateDialog"/>
             </div>
           </div>
         </div>
@@ -108,11 +88,13 @@ import gql from 'graphql-tag';
 import { date } from 'quasar';
 import { Key } from 'readline';
 import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
+import AvailableSlotsTable from '../components/appointment/AvailableSlotsTable.vue';
 import CreateDialog from '../components/appointment/CreateDialog.vue';
 
 @Component({
   components: {
     CreateDialog,
+    AvailableSlotsTable,
   },
 })
 export default class ScheduleAptPage extends Vue {
@@ -171,11 +153,6 @@ export default class ScheduleAptPage extends Vue {
   @Watch('date')
   public onChildChanged(val: any, oldVal: any) {
     this.showTimes = false;
-  }
-
-  public aptDate(aptDate: any) {
-    // tslint:disable-next-line:radix
-    return date.formatDate(parseInt(aptDate), 'DD/MM/YY hh:mm');
   }
 
   public created() {

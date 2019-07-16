@@ -10,7 +10,7 @@ import { Component, Vue } from 'vue-property-decorator';
 @Component({
   meta() {
     return {
-      titleTemplate: (title: any) => `Calmed - ${title}`,
+      titleTemplate: (title: any) => `Cal-Med | ${title}`,
       meta: {
         description: { name: 'description', content: 'Main description' },
         // Define the viewport depending on device (prevent zoom on mobile devices)
