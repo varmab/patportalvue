@@ -189,7 +189,7 @@ export default class PatientAppointment extends Vue {
         icon: 'fas fa-check-circle',
         message: 'Appointment Cancelled successfully!',
       });
-      this.showApt = false;
+      this.getPatApt();
       // this.$router.push('/schedule');
     }).catch((error: any) => {
       this.$q.loading.hide();
