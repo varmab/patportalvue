@@ -89,7 +89,7 @@ export default class PatientAppointment extends Vue {
 
   public aptDate(aptDate: any) {
     // tslint:disable-next-line:radix
-    return date.formatDate(parseInt(aptDate), 'DD/MM/YY hh:mm');
+    return date.formatDate(parseInt(aptDate), 'MM/DD/YY hh:mm a');
   }
 
   public created() {

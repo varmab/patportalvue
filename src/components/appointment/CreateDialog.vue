@@ -55,7 +55,7 @@ export default class CreateDailog extends Vue {
     }
     public aptDate(aptDate: any) {
     // tslint:disable-next-line:radix
-    return date.formatDate(aptDate, 'DD/MM/YY hh:mm');
+    return date.formatDate(aptDate, 'MM/DD/YY hh:mm a');
   }
 }
 </script>

@@ -73,7 +73,31 @@
               </div>
             </div>
             <div v-if="showTimes" class="margin-auto q-pa-md col-xs-12 col-sm-12 col-md-8">
-              <AvailableSlotsTable v-bind:getAvailableSlots="getAvailableSlots" v-bind:columns="columns" @openCreateDialog="openCreateDialog"/>
+              <q-table
+                table-style="height:400px"
+                title="List Of Available Appointments"
+                :data="getAvailableSlots"
+                :columns="columns"
+                :rows-per-page-options="[0]"
+                :pagination.sync="pagination"
+                row-key="RecNo"
+                hide-bottom
+              >
+                <q-tr slot="body" slot-scope="props" :props="props">
+                  <q-td key="Action" :props="props">
+                    <q-btn flat label="Select" color="primary" @click='openCreateDialog(props.row)'></q-btn>
+                  </q-td>
+                  <q-td key="Date" :props="props">
+                    {{aptDate(props.row.appDateTime)}}
+                  </q-td>
+                  <q-td key="Facility" :props="props">
+                    {{props.row.FclDesc}}
+                  </q-td>
+                  <q-td key="AppointmentType" :props="props">
+                    {{props.row.AppType}}
+                  </q-td>
+                </q-tr>
+              </q-table>
             </div>
           </div>
         </div>
@@ -88,13 +112,11 @@ import gql from 'graphql-tag';
 import { date } from 'quasar';
 import { Key } from 'readline';
 import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
-import AvailableSlotsTable from '../components/appointment/AvailableSlotsTable.vue';
 import CreateDialog from '../components/appointment/CreateDialog.vue';
 
 @Component({
   components: {
     CreateDialog,
-    AvailableSlotsTable,
   },
 })
 export default class ScheduleAptPage extends Vue {
@@ -120,6 +142,10 @@ export default class ScheduleAptPage extends Vue {
   public RecNo = '';
   public Type = 'Select Appointment Type';
   public allAppointmentTypes = [];
+  public pagination={
+    page:1,
+    rowsPerPage:0
+  };
   public columns = [
     {
       name: 'Action',
@@ -153,6 +179,11 @@ export default class ScheduleAptPage extends Vue {
   @Watch('date')
   public onChildChanged(val: any, oldVal: any) {
     this.showTimes = false;
+  }
+
+  public aptDate(aptDate: any) {
+    // tslint:disable-next-line:radix
+    return date.formatDate(parseInt(aptDate), 'MM/DD/YY hh:mm a');
   }
 
   public created() {
@@ -308,10 +339,10 @@ export default class ScheduleAptPage extends Vue {
   public openCreateDialog(apt: any) {
     this.createAptDialog = true;
     // tslint:disable-next-line:radix
-    const selectedDate = date.formatDate(parseInt(apt.appDateTime), 'YYYY-MM-DD');
+   //const selectedDate = date.formatDate(parseInt(apt.appDateTime), 'YYYY-MM-DD');
     // tslint:disable-next-line:radix
-    const selectedTime = date.formatDate(parseInt(apt.appDateTime), 'hh:mm:ss');
-    const modifiedDate =  selectedDate + ' ' + selectedTime;
+    //const selectedTime = date.formatDate(parseInt(apt.appDateTime), 'hh:mm:ss');
+    const modifiedDate =   date.formatDate(parseInt(apt.appDateTime), 'MM/DD/YYYY hh:mm a');
     this.appDateTime = modifiedDate;
     const appointment = {
       PatId: this.$store.state.PatId.PatId,
