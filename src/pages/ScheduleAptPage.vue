@@ -147,9 +147,9 @@ export default class ScheduleAptPage extends Vue {
   public RecNo = '';
   public Type = 'Select Appointment Type';
   public allAppointmentTypes = [];
-  public pagination={
-    page:1,
-    rowsPerPage:0
+  public pagination = {
+    page: 1,
+    rowsPerPage: 0,
   };
   public columns = [
     {
@@ -369,11 +369,11 @@ export default class ScheduleAptPage extends Vue {
   }
 
   public closeCreate() {
-    console.log('close called');
     this.createAptDialog = false;
   }
 
   public createAppointment(appointment: any) {
+    // tslint:disable-next-line:no-console
     console.log('creted called', appointment);
     this.createAptDialog = false;
     this.$q.loading.show({
@@ -424,7 +424,7 @@ export default class ScheduleAptPage extends Vue {
     this.createAptDialog = false;
     this.showApt = false;
     this.showTimes = false;
-    this.date = date.formatDate(Date.now(), 'YYYY-MM-DD');
+    this.date = '';
     this.DctName = 'Select Doctor';
     this.DctId = '';
     this.doctorErr = false;
