@@ -128,6 +128,8 @@ export default class PatientAppointment extends Vue {
       },
     }).then((data: any) => {
         const patientAppointment = data.data.patientAppointment;
+        // tslint:disable-next-line:no-console
+        console.log("patientAppointment", patientAppointment);
         this.$q.loading.hide();
         if (patientAppointment.length > 0) {
           this.showApt = true,

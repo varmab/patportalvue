@@ -142,9 +142,9 @@ export default class ScheduleAptPage extends Vue {
   public RecNo = '';
   public Type = 'Select Appointment Type';
   public allAppointmentTypes = [];
-  public pagination={
-    page:1,
-    rowsPerPage:0
+  public pagination = {
+    page: 1,
+    rowsPerPage: 0,
   };
   public columns = [
     {
@@ -339,10 +339,12 @@ export default class ScheduleAptPage extends Vue {
   public openCreateDialog(apt: any) {
     this.createAptDialog = true;
     // tslint:disable-next-line:radix
-   //const selectedDate = date.formatDate(parseInt(apt.appDateTime), 'YYYY-MM-DD');
+  //  const selectedDate = date.formatDate(parseInt(apt.appDateTime), 'YYYY-MM-DD');
+  //   // tslint:disable-next-line:radix
+  //   const selectedTime = date.formatDate(parseInt(apt.appDateTime), 'hh:mm:ss');
+  //   const modifiedDate =   selectedDate + ' ' + selectedTime;
     // tslint:disable-next-line:radix
-    //const selectedTime = date.formatDate(parseInt(apt.appDateTime), 'hh:mm:ss');
-    const modifiedDate =   date.formatDate(parseInt(apt.appDateTime), 'MM/DD/YYYY hh:mm a');
+    const modifiedDate = date.formatDate(parseInt(apt.appDateTime), 'MM/DD/YYYY hh:mm a');
     this.appDateTime = modifiedDate;
     const appointment = {
       PatId: this.$store.state.PatId.PatId,
@@ -448,4 +450,3 @@ export default class ScheduleAptPage extends Vue {
 .d-flex 
   display : flex
 </style>
-
