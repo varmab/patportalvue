@@ -22,7 +22,11 @@
                     <template v-slot:append>
                       <q-icon name="event" class="cursor-pointer">
                         <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                          <q-date v-model="date" @input="() => $refs.qDateProxy.hide()" />
+                          <q-date
+                            :options="disablePrevDates"
+                            v-model="date" 
+                            @input="() => $refs.qDateProxy.hide()" 
+                          />
                         </q-popup-proxy>
                       </q-icon>
                     </template>
@@ -129,7 +133,8 @@ export default class ScheduleAptPage extends Vue {
   public connection = {};
   public path = '';
   public showTimes = false;
-  public date = date.formatDate(Date.now(), 'YYYY-MM-DD');
+  public date = '';
+  // public date = date.formatDate(Date.now(), 'YYYY-MM-DD');
   public doctorErr = false;
   public DctId = '';
   public DctName = 'Select Doctor';
@@ -142,9 +147,9 @@ export default class ScheduleAptPage extends Vue {
   public RecNo = '';
   public Type = 'Select Appointment Type';
   public allAppointmentTypes = [];
-  public pagination = {
-    page: 1,
-    rowsPerPage: 0,
+  public pagination={
+    page:1,
+    rowsPerPage:0
   };
   public columns = [
     {
@@ -181,6 +186,11 @@ export default class ScheduleAptPage extends Vue {
     this.showTimes = false;
   }
 
+  public disablePrevDates(dateD: any) {
+    const today = date.formatDate(Date.now(), 'YYYY/MM/DD');
+    const value = dateD >= today;
+    return value;
+  }
   public aptDate(aptDate: any) {
     // tslint:disable-next-line:radix
     return date.formatDate(parseInt(aptDate), 'MM/DD/YY hh:mm a');
