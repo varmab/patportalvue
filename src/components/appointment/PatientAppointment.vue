@@ -3,7 +3,7 @@
     <div class="q-pa-md" v-if="showApt">
       <q-table
         title="List Of Pending Appointments"
-        table-style="height:400px"
+        table-style="max-height:450px"
         :data="allPatientAppointments"
         :columns="columns"
         :rows-per-page-options="[0]"
