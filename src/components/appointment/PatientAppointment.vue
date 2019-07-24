@@ -3,8 +3,12 @@
     <div class="q-pa-md" v-if="showApt">
       <q-table
         title="List Of Pending Appointments"
+        table-style="height:400px"
         :data="allPatientAppointments"
         :columns="columns"
+        :rows-per-page-options="[0]"
+        :pagination.sync="pagination"
+        hide-bottom
         row-key="name"
       >
       <q-tr slot="body" slot-scope="props" :props="props">
@@ -82,6 +86,10 @@ export default class PatientAppointment extends Vue {
     { name: 'Facility', label: 'Facility', field: 'FclDesc', align: 'left' },
     { name: 'AppointmentType', label: 'Appointment Type', field: 'AppType', align: 'left' },
   ];
+  public pagination = {
+    page: 1,
+    rowsPerPage: 0,
+  };
   public allPatientAppointments = [];
   public connection = {};
   public path = '';
