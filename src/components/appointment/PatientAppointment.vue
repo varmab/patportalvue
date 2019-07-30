@@ -86,6 +86,7 @@ export default class PatientAppointment extends Vue {
   public connection = {};
   public path = '';
   public PatId = {};
+  $apollo: any;
 
   public aptDate(aptDate: any) {
     // tslint:disable-next-line:radix

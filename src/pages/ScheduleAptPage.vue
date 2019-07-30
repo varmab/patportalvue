@@ -180,6 +180,7 @@ export default class ScheduleAptPage extends Vue {
       sortable: false,
     },
   ];
+  $apollo: any;
 
   @Watch('date')
   public onChildChanged(val: any, oldVal: any) {
