@@ -3,8 +3,12 @@
     <div class="q-pa-md" v-if="showApt">
       <q-table
         title="List Of Pending Appointments"
-        :data="patientAppointment"
+        table-style="max-height:450px"
+        :data="allPatientAppointments"
         :columns="columns"
+        :rows-per-page-options="[0]"
+        :pagination.sync="pagination"
+        hide-bottom
         row-key="name"
       >
       <q-tr slot="body" slot-scope="props" :props="props">
@@ -82,7 +86,11 @@ export default class PatientAppointment extends Vue {
     { name: 'Facility', label: 'Facility', field: 'FclDesc', align: 'left' },
     { name: 'AppointmentType', label: 'Appointment Type', field: 'AppType', align: 'left' },
   ];
-  public patientAppointment = [];
+  public pagination = {
+    page: 1,
+    rowsPerPage: 0,
+  };
+  public allPatientAppointments = [];
   public connection = {};
   public path = '';
   public PatId = {};
@@ -108,8 +116,8 @@ export default class PatientAppointment extends Vue {
       message: 'Please wait while loading..',
     });
     this.$apollo.query({
-      query: gql`query patientAppointment($connection: ConnectionInput, $PatId: ListPatIdInput) {
-        patientAppointment(connection: $connection, PatId: $PatId) {
+      query: gql`query allPatientAppointments($connection: ConnectionInput, $PatId: ListPatIdInput) {
+        allPatientAppointments(connection: $connection, PatId: $PatId) {
           RecNo
           PatId
           DctId
@@ -128,13 +136,11 @@ export default class PatientAppointment extends Vue {
         PatId: this.PatId,
       },
     }).then((data: any) => {
-        const patientAppointment = data.data.patientAppointment;
-        // tslint:disable-next-line:no-console
-        console.log("patientAppointment", patientAppointment);
+        const allPatientAppointments = data.data.allPatientAppointments;
         this.$q.loading.hide();
-        if (patientAppointment.length > 0) {
+        if (allPatientAppointments.length > 0) {
           this.showApt = true,
-          this.patientAppointment = patientAppointment;
+          this.allPatientAppointments = allPatientAppointments;
         } else {
           // this.showApt = false;
           this.$router.push('/schedule');
@@ -161,7 +167,7 @@ export default class PatientAppointment extends Vue {
     const appointment = this.cancelApt;
     const deleteAptObj = {
         // tslint:disable-next-line:radix
-      AppDateTime: date.formatDate(parseInt(appointment.AppDateTime), 'YYYY-MM-DD hh:mm:ss'),
+      RecNo: appointment.RecNo,
       PatId: appointment.PatId,
     };
     // tslint:disable-next-line:no-console
