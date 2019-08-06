@@ -147,6 +147,8 @@ export default class ScheduleAptPage extends Vue {
   public RecNo = '';
   public Type = 'Select Appointment Type';
   public allAppointmentTypes = [];
+  public $apollo: any;
+  public $q: any;
   public pagination = {
     page: 1,
     rowsPerPage: 0,

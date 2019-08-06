@@ -60,6 +60,8 @@ export default class PatientAppointment extends Vue {
   public cancelApt: any = [];
   public confirm = false;
   public dateTime = '';
+  public $apollo: any;
+  public $q: any;
   public columns = [
     {
       label: 'Action',
