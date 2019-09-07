@@ -26,9 +26,12 @@ export default class PatientAptPage extends Vue {
   public path = '';
   public PatId = {};
   public created() {
+    // decoding the encoded connection string
     const decoded = decodeURIComponent(this.$route.params.connection);
+    // decrypting the decoded string
     const bytes  = CryptoJS.AES.decrypt(decoded.toString(), 'Calmed');
     const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    // preparing obj of connection string for api calls
     const obj: any = {};
     obj.user = decrypted.userName;
     obj.password = decrypted.password;
