@@ -147,8 +147,6 @@ export default class ScheduleAptPage extends Vue {
   public RecNo = '';
   public Type = 'Select Appointment Type';
   public allAppointmentTypes = [];
-  public $apollo: any;
-  public $q: any;
   public pagination = {
     page: 1,
     rowsPerPage: 0,
@@ -182,6 +180,8 @@ export default class ScheduleAptPage extends Vue {
       sortable: false,
     },
   ];
+  public $apollo: any;
+  public $q: any;
 
   @Watch('date')
   public onChildChanged(val: any, oldVal: any) {
@@ -352,11 +352,11 @@ export default class ScheduleAptPage extends Vue {
     this.createAptDialog = true;
     // tslint:disable-next-line:radix
   //  const selectedDate = date.formatDate(parseInt(apt.appDateTime), 'YYYY-MM-DD');
-  //   // tslint:disable-next-line:radix
-  //   const selectedTime = date.formatDate(parseInt(apt.appDateTime), 'hh:mm:ss');
-  //   const modifiedDate =   selectedDate + ' ' + selectedTime;
+  // tslint:disable-next-line:radix
+    // const selectedTime = date.formatDate(parseInt(apt.appDateTime), 'hh:mm:ss');
+    // const modifiedDate =   selectedDate + ' ' + selectedTime;
     // tslint:disable-next-line:radix
-    const modifiedDate = date.formatDate(parseInt(apt.appDateTime), 'MM/DD/YYYY hh:mm a');
+    const modifiedDate = date.formatDate(parseInt(apt.appDateTime), 'YYYY-MM-DD hh:mm a');
     this.appDateTime = modifiedDate;
     const appointment = {
       PatId: this.$store.state.PatId.PatId,
@@ -375,14 +375,10 @@ export default class ScheduleAptPage extends Vue {
   }
 
   public createAppointment(appointment: any) {
-    // tslint:disable-next-line:no-console
-    console.log('creted called', appointment);
     this.createAptDialog = false;
     this.$q.loading.show({
       message: 'Creating your appointment',
     });
-    // tslint:disable-next-line:no-console
-    console.log('create appointment object: ', appointment);
     this.$apollo.mutate({
       // Query
       mutation: gql`mutation ($connection: ConnectionInput, $appointment: AppointmentInput) {
