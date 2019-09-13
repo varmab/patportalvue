@@ -6,7 +6,13 @@
     "experimentalDecorators": true,
     "module": "esnext",
     "moduleResolution": "node",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "typeRoots": [
+      "./node_modules/@types/"
+    ],
+    "noImplicitAny": false
   },
   "include": [
     "./src/**/*"
