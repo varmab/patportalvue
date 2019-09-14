@@ -194,8 +194,10 @@ export default class ScheduleAptPage extends Vue {
     return value;
   }
   public aptDate(aptDate: any) {
+    const offset = new Date().getTimezoneOffset();
     // tslint:disable-next-line:radix
-    return date.formatDate(parseInt(aptDate), 'MM/DD/YY hh:mm a');
+    const modified = date.addToDate(parseInt(aptDate), { minutes: offset })
+    return date.formatDate(modified, 'MM/DD/YY hh:mm a');
   }
 
   public created() {
@@ -350,13 +352,11 @@ export default class ScheduleAptPage extends Vue {
 
   public openCreateDialog(apt: any) {
     this.createAptDialog = true;
+    const offset = new Date().getTimezoneOffset();
     // tslint:disable-next-line:radix
-  //  const selectedDate = date.formatDate(parseInt(apt.appDateTime), 'YYYY-MM-DD');
-  // tslint:disable-next-line:radix
-    // const selectedTime = date.formatDate(parseInt(apt.appDateTime), 'hh:mm:ss');
-    // const modifiedDate =   selectedDate + ' ' + selectedTime;
-    // tslint:disable-next-line:radix
-    const modifiedDate = date.formatDate(parseInt(apt.appDateTime), 'YYYY-MM-DD hh:mm a');
+    const modified = date.addToDate(parseInt(apt.appDateTime), { minutes: offset });
+
+    const modifiedDate = date.formatDate(modified, 'YYYY-MM-DD hh:mm a');
     this.appDateTime = modifiedDate;
     const appointment = {
       PatId: this.$store.state.PatId.PatId,
