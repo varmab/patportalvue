@@ -98,8 +98,16 @@ export default class PatientAppointment extends Vue {
   public PatId = {};
 
   public aptDate(aptDate: any) {
-    // tslint:disable-next-line:radix
-    return date.formatDate(parseInt(aptDate), 'MM/DD/YY hh:mm a');
+    let modified;
+    const offset = new Date().getTimezoneOffset();
+    if (offset < 0) {
+      // tslint:disable-next-line:radix
+      modified = date.subtractFromDate(parseInt(aptDate), { minutes: offset });
+    } else {
+      // tslint:disable-next-line:radix
+      modified = date.addToDate(parseInt(aptDate), { minutes: offset });
+    }
+    return date.formatDate(modified, 'MM/DD/YY hh:mm a');
   }
 
   public created() {

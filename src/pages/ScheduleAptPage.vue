@@ -195,8 +195,10 @@ export default class ScheduleAptPage extends Vue {
   }
   public aptDate(aptDate: any) {
     const offset = new Date().getTimezoneOffset();
+    // tslint:disable-next-line:no-console
+    console.log('offset', offset);
     // tslint:disable-next-line:radix
-    const modified = date.addToDate(parseInt(aptDate), { minutes: offset })
+    const modified = date.addToDate(parseInt(aptDate), { minutes: offset });
     return date.formatDate(modified, 'MM/DD/YY hh:mm a');
   }
 
@@ -351,10 +353,16 @@ export default class ScheduleAptPage extends Vue {
   }
 
   public openCreateDialog(apt: any) {
+    let modified;
     this.createAptDialog = true;
     const offset = new Date().getTimezoneOffset();
-    // tslint:disable-next-line:radix
-    const modified = date.addToDate(parseInt(apt.appDateTime), { minutes: offset });
+    if (offset < 0) {
+      // tslint:disable-next-line:radix
+      modified = date.subtractFromDate(parseInt(apt.appDateTime), { minutes: offset });
+    } else {
+      // tslint:disable-next-line:radix
+      modified = date.addToDate(parseInt(apt.appDateTime), { minutes: offset });
+    }
 
     const modifiedDate = date.formatDate(modified, 'YYYY-MM-DD hh:mm a');
     this.appDateTime = modifiedDate;
