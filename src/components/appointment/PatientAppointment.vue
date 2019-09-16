@@ -16,7 +16,7 @@
           <q-btn flat label="Cancel" color="primary" @click='openCancelDialog(props.row)'></q-btn>
         </q-td>
         <q-td key="Date" :props="props">
-          {{aptDate(props.row.AppDateTime)}}
+          {{aptDate(props.row)}}
         </q-td>
         <q-td key="Doctor" :props="props">
           {{props.row.DctName}}
@@ -51,6 +51,7 @@
 
 <script lang="ts">
 import gql from 'graphql-tag';
+import moment from 'moment-timezone';
 import { date } from 'quasar';
 import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
 
@@ -97,17 +98,12 @@ export default class PatientAppointment extends Vue {
   public path = '';
   public PatId = {};
 
-  public aptDate(aptDate: any) {
-    let modified;
-    const offset = new Date().getTimezoneOffset();
-    if (offset < 0) {
-      // tslint:disable-next-line:radix
-      modified = date.subtractFromDate(parseInt(aptDate), { minutes: offset });
-    } else {
-      // tslint:disable-next-line:radix
-      modified = date.addToDate(parseInt(aptDate), { minutes: offset });
-    }
-    return date.formatDate(modified, 'MM/DD/YY hh:mm a');
+  public aptDate(apt: any) {
+     const { AppDateTime } = apt;
+    // tslint:disable-next-line:radix
+     const d = new Date(parseInt(AppDateTime));
+     const modi =  d.toISOString();
+     return moment.utc(modi).format('MM/DD/YY hh:mm a');
   }
 
   public created() {

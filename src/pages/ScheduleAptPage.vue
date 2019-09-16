@@ -113,6 +113,7 @@
 
 <script lang="ts">
 import gql from 'graphql-tag';
+import moment from 'moment-timezone';
 import { date } from 'quasar';
 import { Key } from 'readline';
 import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
@@ -194,12 +195,16 @@ export default class ScheduleAptPage extends Vue {
     return value;
   }
   public aptDate(aptDate: any) {
-    const offset = new Date().getTimezoneOffset();
-    // tslint:disable-next-line:no-console
-    console.log('offset', offset);
+    // const offset = new Date().getTimezoneOffset();
+    // // tslint:disable-next-line:no-console
+    // console.log('offset', offset);
+    // // tslint:disable-next-line:radix
+    // const modified = date.addToDate(parseInt(aptDate), { minutes: offset });
+
     // tslint:disable-next-line:radix
-    const modified = date.addToDate(parseInt(aptDate), { minutes: offset });
-    return date.formatDate(modified, 'MM/DD/YY hh:mm a');
+    const d = new Date(parseInt(aptDate));
+    const modi =  d.toISOString();
+    return moment.utc(modi).format('MM/DD/YY hh:mm a');
   }
 
   public created() {
@@ -353,18 +358,27 @@ export default class ScheduleAptPage extends Vue {
   }
 
   public openCreateDialog(apt: any) {
-    let modified;
     this.createAptDialog = true;
-    const offset = new Date().getTimezoneOffset();
-    if (offset < 0) {
-      // tslint:disable-next-line:radix
-      modified = date.subtractFromDate(parseInt(apt.appDateTime), { minutes: offset });
-    } else {
-      // tslint:disable-next-line:radix
-      modified = date.addToDate(parseInt(apt.appDateTime), { minutes: offset });
-    }
+    // let modified;
+    // const offset = new Date().getTimezoneOffset();
+    // if (offset < 0) {
+    //   // tslint:disable-next-line:radix
+    //   modified = date.subtractFromDate(parseInt(apt.appDateTime), { minutes: offset });
+    // } else {
+    //   // tslint:disable-next-line:radix
+    //   modified = date.addToDate(parseInt(apt.appDateTime), { minutes: offset });
+    // }
 
-    const modifiedDate = date.formatDate(modified, 'YYYY-MM-DD hh:mm a');
+    // tslint:disable-next-line:radix
+    // const d = new Date(parseInt(apt.appDateTime));
+    // const modified =  d.toISOString();
+    // console.log('modified', modified);
+    const { appDateTime } = apt;
+    // tslint:disable-next-line:radix
+    const d = new Date(parseInt(appDateTime));
+    const modi =  d.toISOString();
+    const modifiedDate = moment.utc(modi).format('YYYY-MM-DD hh:mm a');
+    console.log('modified date', modifiedDate);
     this.appDateTime = modifiedDate;
     const appointment = {
       PatId: this.$store.state.PatId.PatId,
