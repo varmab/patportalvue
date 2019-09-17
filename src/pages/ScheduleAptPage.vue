@@ -115,7 +115,6 @@
 import gql from 'graphql-tag';
 import moment from 'moment-timezone';
 import { date } from 'quasar';
-import { Key } from 'readline';
 import { Component, Mixins, Vue, Watch } from 'vue-property-decorator';
 import CreateDialog from '../components/appointment/CreateDialog.vue';
 
@@ -135,7 +134,6 @@ export default class ScheduleAptPage extends Vue {
   public path = '';
   public showTimes = false;
   public date = '';
-  // public date = date.formatDate(Date.now(), 'YYYY-MM-DD');
   public doctorErr = false;
   public DctId = '';
   public DctName = 'Select Doctor';
@@ -195,12 +193,6 @@ export default class ScheduleAptPage extends Vue {
     return value;
   }
   public aptDate(aptDate: any) {
-    // const offset = new Date().getTimezoneOffset();
-    // // tslint:disable-next-line:no-console
-    // console.log('offset', offset);
-    // // tslint:disable-next-line:radix
-    // const modified = date.addToDate(parseInt(aptDate), { minutes: offset });
-
     // tslint:disable-next-line:radix
     const d = new Date(parseInt(aptDate));
     const modi =  d.toISOString();
@@ -359,26 +351,12 @@ export default class ScheduleAptPage extends Vue {
 
   public openCreateDialog(apt: any) {
     this.createAptDialog = true;
-    // let modified;
-    // const offset = new Date().getTimezoneOffset();
-    // if (offset < 0) {
-    //   // tslint:disable-next-line:radix
-    //   modified = date.subtractFromDate(parseInt(apt.appDateTime), { minutes: offset });
-    // } else {
-    //   // tslint:disable-next-line:radix
-    //   modified = date.addToDate(parseInt(apt.appDateTime), { minutes: offset });
-    // }
-
-    // tslint:disable-next-line:radix
-    // const d = new Date(parseInt(apt.appDateTime));
-    // const modified =  d.toISOString();
-    // console.log('modified', modified);
     const { appDateTime } = apt;
     // tslint:disable-next-line:radix
     const d = new Date(parseInt(appDateTime));
     const modi =  d.toISOString();
     const modifiedDate = moment.utc(modi).format('YYYY-MM-DD hh:mm a');
-    console.log('modified date', modifiedDate);
+
     this.appDateTime = modifiedDate;
     const appointment = {
       PatId: this.$store.state.PatId.PatId,
@@ -423,7 +401,6 @@ export default class ScheduleAptPage extends Vue {
         connection: this.connection,
       },
     }).then((data: any) => {
-      // this.$q.loading.hide();
       // tslint:disable-next-line:no-console
       console.log('appointment created sussessfully', data);
       this.$q.notify({

@@ -175,8 +175,6 @@ export default class PatientAppointment extends Vue {
       RecNo: appointment.RecNo,
       PatId: appointment.PatId,
     };
-    // tslint:disable-next-line:no-console
-    console.log('deleteAptObj', deleteAptObj);
     this.confirm = false;
     this.$q.loading.show({
       message: 'Cancelling appointment',
